@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - CASRAD</title>
+    <link rel="stylesheet" href="/static/css/dracula.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <span class="nav-brand">CASRAD Admin</span>
+            <ul class="nav-menu">
+                <li><a href="/admin" class="nav-link active">Dashboard</a></li>
+                <li><a href="/admin/users" class="nav-link">Users</a></li>
+                <li><a href="/admin/library" class="nav-link">Library</a></li>
+                <li><a href="/admin/settings" class="nav-link">Settings</a></li>
+                <li><a href="/admin/security" class="nav-link">Security</a></li>
+                <li><a href="/admin/backup" class="nav-link">Backup</a></li>
+                <li><a href="/admin/migration" class="nav-link">Migration</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <aside class="sidebar">
+        <ul class="sidebar-menu">
+            <li class="sidebar-item"><a href="/admin" class="sidebar-link active">Dashboard</a></li>
+            <li class="sidebar-item"><a href="/admin/users" class="sidebar-link">User Management</a></li>
+            <li class="sidebar-item"><a href="/admin/library" class="sidebar-link">Library Management</a></li>
+            <li class="sidebar-item"><a href="/admin/storage" class="sidebar-link">Storage & Quotas</a></li>
+            <li class="sidebar-item"><a href="/admin/protocols" class="sidebar-link">Protocols</a></li>
+            <li class="sidebar-item"><a href="/admin/security" class="sidebar-link">Security</a></li>
+            <li class="sidebar-item"><a href="/admin/logs" class="sidebar-link">Logs</a></li>
+            <li class="sidebar-item"><a href="/admin/metrics" class="sidebar-link">Metrics</a></li>
+            <li class="sidebar-item"><a href="/admin/backup" class="sidebar-link">Backup & Restore</a></li>
+            <li class="sidebar-item"><a href="/admin/migration" class="sidebar-link">Migration</a></li>
+            <li class="sidebar-item"><a href="/admin/scheduler" class="sidebar-link">Scheduler</a></li>
+            <li class="sidebar-item"><a href="/admin/compliance" class="sidebar-link">Compliance</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="container">
+            <h1>Admin Dashboard</h1>
+            
+            <div class="grid grid-cols-4">
+                <div class="card">
+                    <h3>Total Users</h3>
+                    <p id="stat-users" style="font-size: 2rem; color: var(--color-purple);">0</p>
+                </div>
+                <div class="card">
+                    <h3>Total Tracks</h3>
+                    <p id="stat-tracks" style="font-size: 2rem; color: var(--color-green);">0</p>
+                </div>
+                <div class="card">
+                    <h3>Active Streams</h3>
+                    <p id="stat-streams" style="font-size: 2rem; color: var(--color-cyan);">0</p>
+                </div>
+                <div class="card">
+                    <h3>Storage Used</h3>
+                    <p id="stat-storage" style="font-size: 2rem; color: var(--color-yellow);">0 GB</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>System Status</h2>
+                <canvas id="metricsChart"></canvas>
+            </div>
+
+            <div class="grid grid-cols-2">
+                <div class="card">
+                    <h2>Recent Activity</h2>
+                    <ul id="recent-activity" class="track-list">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+                <div class="card">
+                    <h2>Active Sessions</h2>
+                    <ul id="active-sessions" class="track-list">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/static/js/vue.min.js"></script>
+    <script src="/static/js/axios.min.js"></script>
+    <script src="/static/js/chart.min.js"></script>
+    <script src="/static/js/casrad.js"></script>
+    <script>
+        // Initialize dashboard
+        const ctx = document.getElementById('metricsChart');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Active Users',
+                    data: [],
+                    borderColor: '#bd93f9',
+                    tension: 0.1
+                }]
+            }
+        });
+    </script>
+</body>
+</html>

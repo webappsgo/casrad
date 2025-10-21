@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CASRAD Admin Dashboard</title>
+    <link rel="stylesheet" href="/static/css/dracula.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        .admin-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+        .admin-sidebar {
+            background: var(--color-current-line);
+            padding: var(--spacing-lg);
+        }
+        .admin-content {
+            padding: var(--spacing-xl);
+            overflow-y: auto;
+        }
+        .admin-menu {
+            list-style: none;
+        }
+        .admin-menu-item {
+            margin-bottom: var(--spacing-sm);
+        }
+        .admin-menu-link {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius);
+            color: var(--color-foreground);
+            transition: all var(--transition-fast);
+        }
+        .admin-menu-link:hover {
+            background: var(--color-selection);
+            color: var(--color-cyan);
+        }
+        .admin-menu-link.active {
+            background: var(--color-purple);
+            color: var(--color-background);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+        .stat-card {
+            background: var(--color-current-line);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius);
+        }
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: var(--spacing-sm) 0;
+        }
+        .stat-label {
+            color: var(--color-comment);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table th {
+            text-align: left;
+            padding: var(--spacing-md);
+            border-bottom: 2px solid var(--color-border);
+            color: var(--color-cyan);
+        }
+        .table td {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-current-line);
+        }
+        .table tr:hover {
+            background: var(--color-selection);
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: var(--border-radius);
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .badge-success { background: var(--color-green); color: var(--color-background); }
+        .badge-warning { background: var(--color-yellow); color: var(--color-background); }
+        .badge-error { background: var(--color-red); color: var(--color-background); }
+        .badge-info { background: var(--color-cyan); color: var(--color-background); }
+        .chart-container {
+            background: var(--color-current-line);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+        .activity-feed {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .activity-item {
+            display: flex;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-current-line);
+        }
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--color-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .activity-details {
+            flex: 1;
+        }
+        .activity-time {
+            color: var(--color-comment);
+            font-size: 0.875rem;
+        }
+        .tabs {
+            display: flex;
+            gap: var(--spacing-md);
+            border-bottom: 2px solid var(--color-current-line);
+            margin-bottom: var(--spacing-lg);
+        }
+        .tab {
+            padding: var(--spacing-md) var(--spacing-lg);
+            color: var(--color-comment);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .tab:hover {
+            color: var(--color-foreground);
+        }
+        .tab.active {
+            color: var(--color-purple);
+            border-bottom: 2px solid var(--color-purple);
+            margin-bottom: -2px;
+        }
+        .settings-section {
+            background: var(--color-current-line);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+        .settings-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md) 0;
+            border-bottom: 1px solid var(--color-background);
+        }
+        .settings-row:last-child {
+            border-bottom: none;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--color-comment);
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: var(--color-green);
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Admin Sidebar -->
+        <aside class="admin-sidebar">
+            <div style="margin-bottom: var(--spacing-xl);">
+                <h3 style="color: var(--color-purple);">CASRAD Admin</h3>
+                <p style="color: var(--color-comment); font-size: 0.875rem;">System Administration</p>
+            </div>
+
+            <ul class="admin-menu">
+                <li class="admin-menu-item">
+                    <a href="#dashboard" class="admin-menu-link active" data-panel="dashboard">
+                        <span>📊</span> Dashboard
+                    </a>
+                </li>
+                <li class="admin-menu-item">
+                    <a href="#users" class="admin-menu-link" data-panel="users">
+                        <span>👥</span> Users
+                    </a>
+                </li>
+                <li class="admin-menu-item">
+                    <a href="#storage" class="admin-menu-link" data-panel="storage">
+                        <span>💾</span> Storage
+                    </a>
+                </li>
+                <li class="admin-menu-item">
+                    <a href="#library" class="admin-menu-link" data-panel="library">
+                        <span>📚</span> Library
+                    </a>
+                </li>
+                <li class="admin-menu-item">
+                    <a href="#migration" class="admin-menu-link" data-panel="migration">
+                        <span>🔄</span> Migration
+                    </a>
+                </li>
+                <li class="admin-menu-item">
+                    <a href="#backup" class="admin-menu-link" data-panel="backup">
+                        <span>🔐</span> Backup
+                    </a>
+                </li>
+                <li class="admin-menu-item">
+                    <a href="#settings" class="admin-menu-link" data-panel="settings">
+                        <span>⚙️</span> Settings
+                    </a>
+                </li>
+                <li class="admin-menu-item">
+                    <a href="#logs" class="admin-menu-link" data-panel="logs">
+                        <span>📝</span> Logs
+                    </a>
+                </li>
+                <li class="admin-menu-item">
+                    <a href="#security" class="admin-menu-link" data-panel="security">
+                        <span>🛡️</span> Security
+                    </a>
+                </li>
+                <li class="admin-menu-item">
+                    <a href="#compliance" class="admin-menu-link" data-panel="compliance">
+                        <span>📋</span> Compliance
+                    </a>
+                </li>
+            </ul>
+
+            <div style="margin-top: auto; padding-top: var(--spacing-xl);">
+                <a href="/" class="btn btn-secondary" style="width: 100%;">Back to Player</a>
+            </div>
+        </aside>
+
+        <!-- Admin Content -->
+        <main class="admin-content">
+            <!-- Dashboard Panel -->
+            <div class="admin-panel" data-panel="dashboard">
+                <h1>Dashboard</h1>
+                <p style="color: var(--color-comment); margin-bottom: var(--spacing-xl);">System overview and real-time statistics</p>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Users</div>
+                        <div class="stat-value" style="color: var(--color-cyan);">1,234</div>
+                        <div style="color: var(--color-green); font-size: 0.875rem;">↑ 12% this month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Active Streams</div>
+                        <div class="stat-value" style="color: var(--color-purple);">42</div>
+                        <div style="color: var(--color-comment); font-size: 0.875rem;">Peak: 156 today</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Tracks</div>
+                        <div class="stat-value" style="color: var(--color-pink);">89,456</div>
+                        <div style="color: var(--color-comment); font-size: 0.875rem;">1.2TB storage</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">System Uptime</div>
+                        <div class="stat-value" style="color: var(--color-green);">99.9%</div>
+                        <div style="color: var(--color-comment); font-size: 0.875rem;">45 days</div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="grid grid-cols-2" style="gap: var(--spacing-lg);">
+                    <div class="chart-container">
+                        <h3>Streaming Activity</h3>
+                        <div style="height: 200px; background: var(--color-background); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                            <!-- Chart placeholder -->
+                            <div style="padding: var(--spacing-lg); text-align: center; color: var(--color-comment);">
+                                📈 Real-time streaming chart
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <h3>System Resources</h3>
+                        <div style="height: 200px; background: var(--color-background); border-radius: var(--border-radius); margin-top: var(--spacing-md);">
+                            <div style="padding: var(--spacing-lg);">
+                                <div style="margin-bottom: var(--spacing-md);">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-xs);">
+                                        <span>CPU</span>
+                                        <span style="color: var(--color-green);">24%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 24%; background: var(--color-green);"></div>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: var(--spacing-md);">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-xs);">
+                                        <span>Memory</span>
+                                        <span style="color: var(--color-yellow);">68%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 68%; background: var(--color-yellow);"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-xs);">
+                                        <span>Disk</span>
+                                        <span style="color: var(--color-cyan);">42%</span>
+                                    </div>
+                                    <div class="progress">
+                                        <div class="progress-bar" style="width: 42%; background: var(--color-cyan);"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="card" style="margin-top: var(--spacing-lg);">
+                    <h3>Recent Activity</h3>
+                    <div class="activity-feed">
+                        <div class="activity-item">
+                            <div class="activity-icon">👤</div>
+                            <div class="activity-details">
+                                <div><strong>New user registered:</strong> john.doe@example.com</div>
+                                <div class="activity-time">2 minutes ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">🎵</div>
+                            <div class="activity-details">
+                                <div><strong>Library scan completed:</strong> 245 new tracks added</div>
+                                <div class="activity-time">15 minutes ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">🔐</div>
+                            <div class="activity-details">
+                                <div><strong>Backup completed:</strong> Full database backup</div>
+                                <div class="activity-time">1 hour ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">📡</div>
+                            <div class="activity-details">
+                                <div><strong>Stream started:</strong> MPD client connected from 192.168.1.100</div>
+                                <div class="activity-time">2 hours ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Panel -->
+            <div class="admin-panel" data-panel="users" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg);">
+                    <h1>User Management</h1>
+                    <button class="btn btn-primary">+ Add User</button>
+                </div>
+
+                <!-- User Table -->
+                <div class="card">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Storage Used</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>admin</strong></td>
+                                <td>admin@example.com</td>
+                                <td><span class="badge badge-error">Admin</span></td>
+                                <td>12.4 GB / 50 GB</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <button class="btn btn-sm">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>john.doe</strong></td>
+                                <td>john@example.com</td>
+                                <td><span class="badge badge-info">User</span></td>
+                                <td>8.2 GB / 50 GB</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <button class="btn btn-sm">Edit</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Storage Panel -->
+            <div class="admin-panel" data-panel="storage" style="display: none;">
+                <h1>Storage Management</h1>
+                <p style="color: var(--color-comment); margin-bottom: var(--spacing-xl);">Monitor and manage storage quotas and usage</p>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Storage</div>
+                        <div class="stat-value" style="color: var(--color-cyan);">2 TB</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Used Storage</div>
+                        <div class="stat-value" style="color: var(--color-purple);">842 GB</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Free Space</div>
+                        <div class="stat-value" style="color: var(--color-green);">1.16 TB</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Storage Directories</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Path</th>
+                                <th>Type</th>
+                                <th>Size</th>
+                                <th>Files</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>/mnt/Music/Mp3</code></td>
+                                <td>Music</td>
+                                <td>750 GB</td>
+                                <td>89,456</td>
+                                <td><span class="badge badge-success">Healthy</span></td>
+                            </tr>
+                            <tr>
+                                <td><code>/mnt/Podcasts</code></td>
+                                <td>Podcasts</td>
+                                <td>52 GB</td>
+                                <td>1,234</td>
+                                <td><span class="badge badge-success">Healthy</span></td>
+                            </tr>
+                            <tr>
+                                <td><code>/mnt/Audiobooks</code></td>
+                                <td>Audiobooks</td>
+                                <td>40 GB</td>
+                                <td>456</td>
+                                <td><span class="badge badge-success">Healthy</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Migration Panel -->
+            <div class="admin-panel" data-panel="migration" style="display: none;">
+                <h1>Migration Tool</h1>
+                <p style="color: var(--color-comment); margin-bottom: var(--spacing-xl);">Import data from other streaming platforms</p>
+
+                <div class="tabs">
+                    <div class="tab active">Upload Config</div>
+                    <div class="tab">Paste Config</div>
+                    <div class="tab">Upload Database</div>
+                    <div class="tab">API Import</div>
+                </div>
+
+                <div class="card">
+                    <h3>Select Source Platform</h3>
+                    <div class="form-group">
+                        <select class="form-control">
+                            <option>Select platform...</option>
+                            <option>Icecast/Icecast2</option>
+                            <option>Shoutcast</option>
+                            <option>Subsonic/Airsonic/Navidrome</option>
+                            <option>Ampache</option>
+                            <option>Jellyfin/Emby/Plex (audio only)</option>
+                            <option>MPD</option>
+                            <option>Funkwhale</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Upload Configuration File</label>
+                        <input type="file" class="form-control">
+                        <div class="form-text">Upload your platform's configuration file (XML, JSON, or INI format)</div>
+                    </div>
+
+                    <button class="btn btn-primary">Start Migration</button>
+                </div>
+
+                <div class="card" style="margin-top: var(--spacing-lg);">
+                    <h3>Migration History</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Source</th>
+                                <th>Items</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: var(--color-comment);">
+                                    No migrations yet
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Settings Panel -->
+            <div class="admin-panel" data-panel="settings" style="display: none;">
+                <h1>Settings</h1>
+                <p style="color: var(--color-comment); margin-bottom: var(--spacing-xl);">Configure CASRAD server settings</p>
+
+                <div class="settings-section">
+                    <h3>General Settings</h3>
+                    <div class="settings-row">
+                        <div>
+                            <div>Server Name</div>
+                            <div style="color: var(--color-comment); font-size: 0.875rem;">Display name for your server</div>
+                        </div>
+                        <input type="text" class="form-control" style="width: 300px;" value="CASRAD Server">
+                    </div>
+                    <div class="settings-row">
+                        <div>
+                            <div>Default Theme</div>
+                            <div style="color: var(--color-comment); font-size: 0.875rem;">Default theme for new users</div>
+                        </div>
+                        <select class="form-control" style="width: 200px;">
+                            <option>Dracula Dark</option>
+                            <option>Clean Light</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Protocol Settings</h3>
+                    <div class="settings-row">
+                        <div>
+                            <div>MPD Server</div>
+                            <div style="color: var(--color-comment); font-size: 0.875rem;">Port 6600</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-row">
+                        <div>
+                            <div>Subsonic API</div>
+                            <div style="color: var(--color-comment); font-size: 0.875rem;">Compatible with all Subsonic clients</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-row">
+                        <div>
+                            <div>RTMP Server</div>
+                            <div style="color: var(--color-comment); font-size: 0.875rem;">Port 1935</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Performance Settings</h3>
+                    <div class="settings-row">
+                        <div>
+                            <div>Max Connections</div>
+                            <div style="color: var(--color-comment); font-size: 0.875rem;">Maximum concurrent connections</div>
+                        </div>
+                        <input type="number" class="form-control" style="width: 150px;" value="10000">
+                    </div>
+                    <div class="settings-row">
+                        <div>
+                            <div>Max Streams</div>
+                            <div style="color: var(--color-comment); font-size: 0.875rem;">Maximum concurrent audio streams</div>
+                        </div>
+                        <input type="number" class="form-control" style="width: 150px;" value="1000">
+                    </div>
+                    <div class="settings-row">
+                        <div>
+                            <div>Cache Size</div>
+                            <div style="color: var(--color-comment); font-size: 0.875rem;">Memory cache size (0 = auto)</div>
+                        </div>
+                        <input type="number" class="form-control" style="width: 150px;" value="0" placeholder="MB">
+                    </div>
+                </div>
+
+                <div style="margin-top: var(--spacing-xl);">
+                    <button class="btn btn-primary">Save Settings</button>
+                    <button class="btn btn-secondary">Reset to Defaults</button>
+                </div>
+            </div>
+
+            <!-- Compliance Panel -->
+            <div class="admin-panel" data-panel="compliance" style="display: none;">
+                <h1>Compliance Framework</h1>
+                <p style="color: var(--color-comment); margin-bottom: var(--spacing-xl);">Enable compliance frameworks as needed (all disabled by default)</p>
+
+                <div class="settings-section">
+                    <h3>Privacy Regulations</h3>
+                    <div class="settings-row">
+                        <div>
+                            <div>GDPR</div>
+                            <div style="color: var(--color-comment); font-size: 0.875rem;">European data protection</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-row">
+                        <div>
+                            <div>CCPA</div>
+                            <div style="color: var(--color-comment); font-size: 0.875rem;">California privacy</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-row">
+                        <div>
+                            <div>COPPA</div>
+                            <div style="color: var(--color-comment); font-size: 0.875rem;">Children's online privacy</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-row">
+                        <div>
+                            <div>DMCA</div>
+                            <div style="color: var(--color-comment); font-size: 0.875rem;">Copyright protection</div>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Admin panel navigation
+        document.querySelectorAll('.admin-menu-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                // Update active menu item
+                document.querySelectorAll('.admin-menu-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+
+                // Show corresponding panel
+                const panelName = link.getAttribute('data-panel');
+                document.querySelectorAll('.admin-panel').forEach(p => p.style.display = 'none');
+                document.querySelector(`[data-panel="${panelName}"]`).style.display = 'block';
+            });
+        });
+
+        // Fetch and update real-time stats
+        async function updateStats() {
+            try {
+                const response = await fetch('/api/v1/admin/dashboard');
+                const data = await response.json();
+                // Update UI with real data
+            } catch (error) {
+                console.error('Failed to fetch dashboard data:', error);
+            }
+        }
+
+        // Update stats every 30 seconds
+        setInterval(updateStats, 30000);
+        updateStats();
+    </script>
+</body>
+</html>

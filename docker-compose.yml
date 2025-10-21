@@ -1,0 +1,167 @@
+# CASRAD Production Docker Compose Configuration
+version: '3.8'
+
+services:
+  casrad:
+    image: casrad:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: casrad
+    restart: unless-stopped
+    user: "963:963"
+    
+    ports:
+      # HTTP/HTTPS
+      - "80:80"
+      - "443:443"
+      # MPD Protocol
+      - "6600:6600"
+      # RTMP Streaming
+      - "1935:1935"
+      # DLNA/UPnP SSDP
+      - "1900:1900/udp"
+      # Auto-discovery port range (optional, comment out if not needed)
+      # - "64000-64999:64000-64999"
+    
+    volumes:
+      # Data directories
+      - casrad_data:/var/lib/casrad
+      - casrad_config:/etc/casrad
+      - casrad_cache:/var/cache/casrad
+      - casrad_logs:/var/log/casrad
+      
+      # Music directories (customize these paths)
+      - /mnt/Music/Mp3:/mnt/Music/Mp3:ro
+      - /mnt/Podcasts:/mnt/Podcasts:ro
+      - /mnt/Audiobooks:/mnt/Audiobooks:ro
+      - /mnt/Playlists:/mnt/Playlists:ro
+      
+      # User storage (for uploads)
+      - user_storage:/var/lib/casrad/users
+    
+    environment:
+      # Basic configuration
+      CASRAD_PORT: 80
+      CASRAD_DATA_PATH: /var/lib/casrad
+      CASRAD_DEBUG: "false"
+      
+      # Database (SQLite is default, can use external)
+      # CASRAD_DB_TYPE: sqlite
+      # CASRAD_DB_PATH: /var/lib/casrad/server.db
+      
+      # Optional: External database
+      # CASRAD_DB_TYPE: postgres
+      # CASRAD_DB_HOST: db
+      # CASRAD_DB_PORT: 5432
+      # CASRAD_DB_NAME: casrad
+      # CASRAD_DB_USER: casrad
+      # CASRAD_DB_PASS: changeme
+      
+      # Optional: Redis cache
+      # CASRAD_CACHE_TYPE: redis
+      # CASRAD_CACHE_HOST: redis
+      # CASRAD_CACHE_PORT: 6379
+    
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    networks:
+      - casrad_network
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # Optional: PostgreSQL database for production
+  # Uncomment to use PostgreSQL instead of SQLite
+  # db:
+  #   image: postgres:16-alpine
+  #   container_name: casrad_db
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_DB: casrad
+  #     POSTGRES_USER: casrad
+  #     POSTGRES_PASSWORD: changeme
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   networks:
+  #     - casrad_network
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U casrad"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  # Optional: Redis/Valkey cache for performance
+  # Uncomment to enable caching
+  # cache:
+  #   image: redis:7-alpine
+  #   container_name: casrad_cache
+  #   restart: unless-stopped
+  #   command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+  #   volumes:
+  #     - redis_data:/data
+  #   networks:
+  #     - casrad_network
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  # Optional: Nginx reverse proxy with SSL termination
+  # Uncomment for production with SSL
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: casrad_nginx
+  #   restart: unless-stopped
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./ssl:/etc/nginx/ssl:ro
+  #     - nginx_cache:/var/cache/nginx
+  #   depends_on:
+  #     - casrad
+  #   networks:
+  #     - casrad_network
+
+networks:
+  casrad_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+volumes:
+  # CASRAD volumes
+  casrad_data:
+    driver: local
+  casrad_config:
+    driver: local
+  casrad_cache:
+    driver: local
+  casrad_logs:
+    driver: local
+  user_storage:
+    driver: local
+  
+  # Optional database volumes
+  # postgres_data:
+  #   driver: local
+  # redis_data:
+  #   driver: local
+  # nginx_cache:
+  #   driver: local

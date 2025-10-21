@@ -1,0 +1,40 @@
+{
+  "name": "light",
+  "display_name": "Clean Light",
+  "description": "Clean and modern light theme",
+  "is_default": false,
+  "colors": {
+    "background": "#ffffff",
+    "current_line": "#f5f5f5",
+    "foreground": "#2e3440",
+    "comment": "#6c757d",
+    "cyan": "#0969da",
+    "green": "#1a7f37",
+    "orange": "#fb8500",
+    "pink": "#bf3989",
+    "purple": "#8250df",
+    "red": "#cf222e",
+    "yellow": "#d4a72c",
+    "selection": "#e1e4e8",
+    "border": "#d0d7de",
+    "shadow": "rgba(0,0,0,0.1)",
+    "hover": "#0969da",
+    "active": "#8250df",
+    "success": "#1a7f37",
+    "warning": "#d4a72c",
+    "error": "#cf222e",
+    "info": "#0969da"
+  },
+  "typography": {
+    "font_family_primary": "Inter, system-ui, sans-serif",
+    "font_family_mono": "JetBrains Mono, monospace",
+    "font_size_base": "16px",
+    "font_weight_normal": "400",
+    "font_weight_bold": "600"
+  },
+  "spacing": {
+    "spacing_unit": "8px",
+    "border_radius": "6px",
+    "transition_speed": "200ms"
+  }
+}

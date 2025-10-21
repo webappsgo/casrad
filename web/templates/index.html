@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CASRAD - Complete Audio Streaming</title>
+    <link rel="stylesheet" href="/static/css/dracula.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="nav-brand">
+                <svg width="30" height="30" viewBox="0 0 100 100" fill="currentColor">
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="5"/>
+                    <path d="M30 50 L70 50 M50 30 L50 70" stroke="currentColor" stroke-width="5"/>
+                </svg>
+                CASRAD
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#" class="nav-link active">Library</a></li>
+                <li><a href="#" class="nav-link">Radio</a></li>
+                <li><a href="#" class="nav-link">Podcasts</a></li>
+                <li><a href="#" class="nav-link">Settings</a></li>
+                <li><a href="#" class="btn btn-primary">Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <ul class="sidebar-menu">
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link active">
+                    <span>🎵</span> Now Playing
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <span>📚</span> Albums
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <span>👤</span> Artists
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <span>🎼</span> Tracks
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <span>📻</span> Radio
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <span>🎙️</span> Podcasts
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <span>📝</span> Playlists
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <span>🤖</span> AutoDJ
+                </a>
+            </li>
+        </ul>
+
+        <div style="padding: var(--spacing-md); margin-top: auto;">
+            <div class="card" style="background: var(--color-background);">
+                <h6 style="color: var(--color-purple); margin-bottom: var(--spacing-sm);">Server Status</h6>
+                <div style="font-size: 0.875rem; color: var(--color-comment);">
+                    <div>CPU: <span id="cpu-usage">12%</span></div>
+                    <div>Memory: <span id="memory-usage">384MB</span></div>
+                    <div>Streams: <span id="active-streams">0</span></div>
+                    <div>Users: <span id="online-users">1</span></div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Now Playing -->
+            <section class="card" id="now-playing-section">
+                <h2>Now Playing</h2>
+                <div class="grid grid-cols-2" style="align-items: center;">
+                    <div>
+                        <div class="album-cover" style="width: 300px; height: 300px; background: linear-gradient(135deg, var(--color-purple), var(--color-pink)); border-radius: var(--border-radius);"></div>
+                    </div>
+                    <div>
+                        <h3 id="current-title">No Track Playing</h3>
+                        <p style="color: var(--color-comment); margin-bottom: var(--spacing-lg);">
+                            <span id="current-artist">Select a track to play</span> •
+                            <span id="current-album">—</span>
+                        </p>
+                        <div class="progress" style="margin-bottom: var(--spacing-lg);">
+                            <div class="progress-bar" style="width: 0%"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-lg); color: var(--color-comment); font-size: 0.875rem;">
+                            <span id="current-time">0:00</span>
+                            <span id="total-time">0:00</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Library Stats -->
+            <section class="grid grid-cols-4" style="margin-bottom: var(--spacing-lg);">
+                <div class="card">
+                    <h4 style="color: var(--color-cyan);">Tracks</h4>
+                    <p style="font-size: 2rem; font-weight: bold;" id="total-tracks">0</p>
+                </div>
+                <div class="card">
+                    <h4 style="color: var(--color-green);">Albums</h4>
+                    <p style="font-size: 2rem; font-weight: bold;" id="total-albums">0</p>
+                </div>
+                <div class="card">
+                    <h4 style="color: var(--color-yellow);">Artists</h4>
+                    <p style="font-size: 2rem; font-weight: bold;" id="total-artists">0</p>
+                </div>
+                <div class="card">
+                    <h4 style="color: var(--color-purple);">Playlists</h4>
+                    <p style="font-size: 2rem; font-weight: bold;" id="total-playlists">0</p>
+                </div>
+            </section>
+
+            <!-- Recent Albums -->
+            <section class="card">
+                <h2>Recent Albums</h2>
+                <div class="album-grid" id="album-grid">
+                    <!-- Albums will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Track List -->
+            <section class="card">
+                <h2>All Tracks</h2>
+                <ul class="track-list" id="track-list">
+                    <!-- Tracks will be loaded here -->
+                </ul>
+            </section>
+        </div>
+    </main>
+
+    <!-- Player -->
+    <div class="player">
+        <div class="player-controls">
+            <button class="player-btn" id="prev-btn">⏮</button>
+            <button class="player-btn play-btn" id="play-btn">▶</button>
+            <button class="player-btn" id="next-btn">⏭</button>
+            <div style="flex: 1; margin: 0 var(--spacing-xl);">
+                <div class="progress">
+                    <div class="progress-bar" id="player-progress" style="width: 0%"></div>
+                </div>
+            </div>
+            <button class="player-btn" id="volume-btn">🔊</button>
+            <button class="player-btn" id="queue-btn">☰</button>
+        </div>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="audio-player" preload="metadata"></audio>
+
+    <script src="/static/js/casrad.js"></script>
+</body>
+</html>

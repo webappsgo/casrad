@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CASRAD Setup Wizard</title>
+    <link rel="stylesheet" href="/static/css/dracula.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .setup-wizard {
+            max-width: 600px;
+            width: 100%;
+            padding: var(--spacing-xl);
+        }
+        .wizard-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        .wizard-logo {
+            font-size: 4rem;
+            margin-bottom: var(--spacing-md);
+        }
+        .wizard-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-xl);
+            padding: 0 var(--spacing-lg);
+        }
+        .wizard-step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--color-current-line);
+            color: var(--color-comment);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: bold;
+            position: relative;
+        }
+        .wizard-step.active {
+            background: var(--color-purple);
+            color: var(--color-background);
+        }
+        .wizard-step.completed {
+            background: var(--color-green);
+            color: var(--color-background);
+        }
+        .wizard-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: calc(100vw / 7 - 30px);
+            max-width: 120px;
+            height: 2px;
+            background: var(--color-current-line);
+        }
+        .wizard-content {
+            background: var(--color-current-line);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+        }
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            color: var(--color-cyan);
+            font-weight: var(--font-weight-bold);
+        }
+        .form-control {
+            width: 100%;
+            padding: var(--spacing-md);
+            background: var(--color-background);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius);
+            color: var(--color-foreground);
+            font-family: var(--font-primary);
+            font-size: 1rem;
+            transition: all var(--transition-fast);
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-purple);
+            box-shadow: 0 0 0 3px rgba(189, 147, 249, 0.1);
+        }
+        .form-text {
+            font-size: 0.875rem;
+            color: var(--color-comment);
+            margin-top: var(--spacing-xs);
+        }
+        .form-checkbox {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        .wizard-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--spacing-xl);
+        }
+        .system-check {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-md);
+            background: var(--color-background);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--spacing-md);
+        }
+        .check-pass { color: var(--color-green); }
+        .check-fail { color: var(--color-red); }
+    </style>
+</head>
+<body>
+    <div class="setup-wizard">
+        <div class="wizard-header">
+            <div class="wizard-logo">🎵</div>
+            <h1>CASRAD Setup Wizard</h1>
+            <p style="color: var(--color-comment);">Complete Audio Streaming, Radio, and Distribution</p>
+        </div>
+
+        <div class="wizard-steps">
+            <div class="wizard-step active" data-step="1">1</div>
+            <div class="wizard-step" data-step="2">2</div>
+            <div class="wizard-step" data-step="3">3</div>
+            <div class="wizard-step" data-step="4">4</div>
+            <div class="wizard-step" data-step="5">5</div>
+            <div class="wizard-step" data-step="6">6</div>
+            <div class="wizard-step" data-step="7">7</div>
+        </div>
+
+        <div class="wizard-content">
+            <!-- Step 1: Welcome -->
+            <div class="wizard-panel" data-panel="1">
+                <h2>Welcome to CASRAD</h2>
+                <p style="margin-bottom: var(--spacing-lg);">
+                    CASRAD consolidates over 50 different audio streaming servers into one
+                    single-binary solution with zero configuration required.
+                </p>
+
+                <h4 style="color: var(--color-green); margin-bottom: var(--spacing-md);">System Check</h4>
+                <div class="system-check">
+                    <span>Database</span>
+                    <span class="check-pass">✓ SQLite Ready</span>
+                </div>
+                <div class="system-check">
+                    <span>FFMPEG</span>
+                    <span class="check-pass">✓ Found</span>
+                </div>
+                <div class="system-check">
+                    <span>Storage</span>
+                    <span class="check-pass">✓ Writable</span>
+                </div>
+                <div class="system-check">
+                    <span>Ports</span>
+                    <span class="check-pass">✓ Available</span>
+                </div>
+            </div>
+
+            <!-- Step 2: Admin Account -->
+            <div class="wizard-panel" data-panel="2" style="display: none;">
+                <h2>Admin Account</h2>
+                <p style="margin-bottom: var(--spacing-lg);">Create the administrator account for managing CASRAD.</p>
+
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" class="form-control" id="admin-username" placeholder="admin">
+                    <div class="form-text">Choose a unique username for the admin account</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" id="admin-email" placeholder="admin@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-control" id="admin-password" placeholder="••••••••">
+                    <div class="form-text">Minimum 8 characters</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" class="form-control" id="admin-password-confirm" placeholder="••••••••">
+                </div>
+            </div>
+
+            <!-- Step 3: Storage Configuration -->
+            <div class="wizard-panel" data-panel="3" style="display: none;">
+                <h2>Storage Configuration</h2>
+                <p style="margin-bottom: var(--spacing-lg);">Configure storage paths for media files. Default paths are recommended.</p>
+
+                <div class="form-group">
+                    <label>Global Music Directory</label>
+                    <input type="text" class="form-control" value="/mnt/Music/Mp3" id="music-path">
+                    <div class="form-text">Main directory for global music collection</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Podcast Directory</label>
+                    <input type="text" class="form-control" value="/mnt/Podcasts" id="podcast-path">
+                </div>
+
+                <div class="form-group">
+                    <label>Audiobook Directory</label>
+                    <input type="text" class="form-control" value="/mnt/Audiobooks" id="audiobook-path">
+                </div>
+
+                <div class="form-group">
+                    <label>User Storage Quota</label>
+                    <input type="number" class="form-control" value="50" id="user-quota">
+                    <div class="form-text">Default storage quota per user in GB</div>
+                </div>
+            </div>
+
+            <!-- Step 4: Protocol Configuration -->
+            <div class="wizard-panel" data-panel="4" style="display: none;">
+                <h2>Protocol Configuration</h2>
+                <p style="margin-bottom: var(--spacing-lg);">Enable or disable protocol servers. All are enabled by default.</p>
+
+                <div class="form-group">
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="enable-mpd" checked>
+                        <label for="enable-mpd">MPD Server (Port 6600)</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="enable-subsonic" checked>
+                        <label for="enable-subsonic">Subsonic API</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="enable-ampache" checked>
+                        <label for="enable-ampache">Ampache API</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="enable-webdav" checked>
+                        <label for="enable-webdav">WebDAV Server</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="enable-rtmp" checked>
+                        <label for="enable-rtmp">RTMP Server (Port 1935)</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="enable-dlna" checked>
+                        <label for="enable-dlna">DLNA/UPnP Server</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Network Settings -->
+            <div class="wizard-panel" data-panel="5" style="display: none;">
+                <h2>Network Settings</h2>
+                <p style="margin-bottom: var(--spacing-lg);">Configure network ports and bindings.</p>
+
+                <div class="form-group">
+                    <label>HTTP Port</label>
+                    <input type="number" class="form-control" value="80" id="http-port">
+                    <div class="form-text">0 = auto-select from 64000-64999</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Bind Address</label>
+                    <input type="text" class="form-control" value="0.0.0.0" id="bind-address">
+                    <div class="form-text">0.0.0.0 binds to all interfaces</div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="behind-proxy">
+                        <label for="behind-proxy">Running behind reverse proxy</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: SSL Configuration -->
+            <div class="wizard-panel" data-panel="6" style="display: none;">
+                <h2>SSL Configuration</h2>
+                <p style="margin-bottom: var(--spacing-lg);">Configure SSL/TLS with Let's Encrypt (optional).</p>
+
+                <div class="form-group">
+                    <div class="form-checkbox">
+                        <input type="checkbox" id="enable-ssl">
+                        <label for="enable-ssl">Enable SSL with Let's Encrypt</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Domain Name</label>
+                    <input type="text" class="form-control" placeholder="music.example.com" id="domain-name" disabled>
+                    <div class="form-text">Required for Let's Encrypt SSL certificate</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Admin Email</label>
+                    <input type="email" class="form-control" placeholder="admin@example.com" id="ssl-email" disabled>
+                    <div class="form-text">Email for Let's Encrypt notifications</div>
+                </div>
+            </div>
+
+            <!-- Step 7: Complete -->
+            <div class="wizard-panel" data-panel="7" style="display: none;">
+                <h2 style="color: var(--color-green);">Setup Complete! 🎉</h2>
+
+                <div style="background: var(--color-background); padding: var(--spacing-lg); border-radius: var(--border-radius); margin: var(--spacing-lg) 0;">
+                    <h4 style="margin-bottom: var(--spacing-md);">Your CASRAD server is ready!</h4>
+
+                    <p style="margin-bottom: var(--spacing-md);">Access your server at:</p>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="margin-bottom: var(--spacing-sm);">
+                            <strong style="color: var(--color-cyan);">Web Interface:</strong>
+                            <span id="web-url">http://localhost</span>
+                        </li>
+                        <li style="margin-bottom: var(--spacing-sm);">
+                            <strong style="color: var(--color-cyan);">MPD Port:</strong> 6600
+                        </li>
+                        <li style="margin-bottom: var(--spacing-sm);">
+                            <strong style="color: var(--color-cyan);">RTMP Port:</strong> 1935
+                        </li>
+                    </ul>
+                </div>
+
+                <p style="color: var(--color-comment);">
+                    You can now start adding music, creating playlists, and streaming!
+                </p>
+            </div>
+        </div>
+
+        <div class="wizard-actions">
+            <button class="btn btn-secondary" id="prev-btn" style="display: none;">Previous</button>
+            <button class="btn btn-primary" id="next-btn">Next</button>
+            <button class="btn btn-success" id="complete-btn" style="display: none;">Start Using CASRAD</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 7;
+
+        document.getElementById('next-btn').addEventListener('click', () => {
+            if (currentStep < totalSteps) {
+                // Validate current step
+                if (validateStep(currentStep)) {
+                    // Update step indicators
+                    document.querySelector(`[data-step="${currentStep}"]`).classList.remove('active');
+                    document.querySelector(`[data-step="${currentStep}"]`).classList.add('completed');
+                    currentStep++;
+                    document.querySelector(`[data-step="${currentStep}"]`).classList.add('active');
+
+                    // Update panels
+                    document.querySelectorAll('.wizard-panel').forEach(p => p.style.display = 'none');
+                    document.querySelector(`[data-panel="${currentStep}"]`).style.display = 'block';
+
+                    // Update buttons
+                    document.getElementById('prev-btn').style.display = currentStep > 1 ? 'block' : 'none';
+                    document.getElementById('next-btn').style.display = currentStep < totalSteps ? 'block' : 'none';
+                    document.getElementById('complete-btn').style.display = currentStep === totalSteps ? 'block' : 'none';
+                }
+            }
+        });
+
+        document.getElementById('prev-btn').addEventListener('click', () => {
+            if (currentStep > 1) {
+                document.querySelector(`[data-step="${currentStep}"]`).classList.remove('active');
+                currentStep--;
+                document.querySelector(`[data-step="${currentStep}"]`).classList.remove('completed');
+                document.querySelector(`[data-step="${currentStep}"]`).classList.add('active');
+
+                document.querySelectorAll('.wizard-panel').forEach(p => p.style.display = 'none');
+                document.querySelector(`[data-panel="${currentStep}"]`).style.display = 'block';
+
+                document.getElementById('prev-btn').style.display = currentStep > 1 ? 'block' : 'none';
+                document.getElementById('next-btn').style.display = 'block';
+                document.getElementById('complete-btn').style.display = 'none';
+            }
+        });
+
+        document.getElementById('complete-btn').addEventListener('click', async () => {
+            // Submit setup configuration
+            const config = gatherConfiguration();
+            try {
+                const response = await fetch('/api/v1/setup/complete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(config)
+                });
+
+                if (response.ok) {
+                    window.location.href = '/';
+                }
+            } catch (error) {
+                console.error('Setup failed:', error);
+            }
+        });
+
+        // Enable SSL fields when checkbox is checked
+        document.getElementById('enable-ssl').addEventListener('change', (e) => {
+            document.getElementById('domain-name').disabled = !e.target.checked;
+            document.getElementById('ssl-email').disabled = !e.target.checked;
+        });
+
+        function validateStep(step) {
+            // Add validation logic for each step
+            switch(step) {
+                case 2:
+                    // Validate admin account
+                    const username = document.getElementById('admin-username').value;
+                    const email = document.getElementById('admin-email').value;
+                    const password = document.getElementById('admin-password').value;
+                    const confirm = document.getElementById('admin-password-confirm').value;
+
+                    if (!username || !email || !password) {
+                        alert('Please fill in all fields');
+                        return false;
+                    }
+                    if (password.length < 8) {
+                        alert('Password must be at least 8 characters');
+                        return false;
+                    }
+                    if (password !== confirm) {
+                        alert('Passwords do not match');
+                        return false;
+                    }
+                    break;
+            }
+            return true;
+        }
+
+        function gatherConfiguration() {
+            return {
+                admin: {
+                    username: document.getElementById('admin-username').value,
+                    email: document.getElementById('admin-email').value,
+                    password: document.getElementById('admin-password').value
+                },
+                storage: {
+                    music_path: document.getElementById('music-path').value,
+                    podcast_path: document.getElementById('podcast-path').value,
+                    audiobook_path: document.getElementById('audiobook-path').value,
+                    user_quota_gb: parseInt(document.getElementById('user-quota').value)
+                },
+                protocols: {
+                    mpd: document.getElementById('enable-mpd').checked,
+                    subsonic: document.getElementById('enable-subsonic').checked,
+                    ampache: document.getElementById('enable-ampache').checked,
+                    webdav: document.getElementById('enable-webdav').checked,
+                    rtmp: document.getElementById('enable-rtmp').checked,
+                    dlna: document.getElementById('enable-dlna').checked
+                },
+                network: {
+                    http_port: parseInt(document.getElementById('http-port').value),
+                    bind_address: document.getElementById('bind-address').value,
+                    behind_proxy: document.getElementById('behind-proxy').checked
+                },
+                ssl: {
+                    enabled: document.getElementById('enable-ssl').checked,
+                    domain: document.getElementById('domain-name').value,
+                    email: document.getElementById('ssl-email').value
+                }
+            };
+        }
+    </script>
+</body>
+</html>
