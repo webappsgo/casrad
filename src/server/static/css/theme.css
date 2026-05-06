@@ -1,0 +1,435 @@
+/* Theme CSS Variables - See AI.md PART 16 */
+/* Dracula Dark Theme (Default) */
+
+:root {
+    /* Dracula color palette */
+    --color-background: #282a36;
+    --color-current-line: #44475a;
+    --color-foreground: #f8f8f2;
+    --color-comment: #6272a4;
+    --color-cyan: #8be9fd;
+    --color-green: #50fa7b;
+    --color-orange: #ffb86c;
+    --color-pink: #ff79c6;
+    --color-purple: #bd93f9;
+    --color-red: #ff5555;
+    --color-yellow: #f1fa8c;
+
+    /* UI specific */
+    --color-selection: #44475a;
+    --color-border: #6272a4;
+    --color-shadow: rgba(0, 0, 0, 0.3);
+    --color-hover: #50fa7b;
+    --color-active: #bd93f9;
+
+    /* Status colors */
+    --color-success: #50fa7b;
+    --color-warning: #f1fa8c;
+    --color-error: #ff5555;
+    --color-info: #8be9fd;
+
+    /* Typography */
+    --font-primary: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+    --font-size-base: 16px;
+    --font-weight-normal: 400;
+    --font-weight-bold: 600;
+
+    /* Spacing (8px grid) */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+
+    /* Borders & Shadows */
+    --border-radius: 6px;
+    --border-width: 1px;
+    --shadow-sm: 0 2px 4px var(--color-shadow);
+    --shadow-md: 0 4px 8px var(--color-shadow);
+    --shadow-lg: 0 8px 16px var(--color-shadow);
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-normal: 250ms ease;
+    --transition-slow: 350ms ease;
+}
+
+/* Light Theme */
+[data-theme="light"],
+.theme-light {
+    --color-background: #ffffff;
+    --color-current-line: #f5f5f5;
+    --color-foreground: #2e3440;
+    --color-comment: #6c757d;
+    --color-cyan: #0969da;
+    --color-green: #1a7f37;
+    --color-orange: #fb8500;
+    --color-pink: #bf3989;
+    --color-purple: #8250df;
+    --color-red: #cf222e;
+    --color-yellow: #d4a72c;
+
+    --color-selection: #e1e4e8;
+    --color-border: #d0d7de;
+    --color-shadow: rgba(0, 0, 0, 0.1);
+    --color-hover: #0969da;
+    --color-active: #8250df;
+}
+
+/* Auto theme - follows system preference */
+@media (prefers-color-scheme: light) {
+    .theme-auto {
+        --color-background: #ffffff;
+        --color-current-line: #f5f5f5;
+        --color-foreground: #2e3440;
+        --color-comment: #6c757d;
+        --color-cyan: #0969da;
+        --color-green: #1a7f37;
+        --color-orange: #fb8500;
+        --color-pink: #bf3989;
+        --color-purple: #8250df;
+        --color-red: #cf222e;
+        --color-yellow: #d4a72c;
+        --color-selection: #e1e4e8;
+        --color-border: #d0d7de;
+        --color-shadow: rgba(0, 0, 0, 0.1);
+        --color-hover: #0969da;
+        --color-active: #8250df;
+    }
+}
+
+/* Base styles */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: var(--font-size-base);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-primary);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Main content area */
+main {
+    flex: 1;
+}
+
+/* Responsive container - PART 16 spec */
+.container {
+    width: 98%;
+    margin: 0 auto;
+    max-width: 1400px;
+}
+
+@media (min-width: 720px) {
+    .container {
+        width: 90%;
+    }
+}
+
+/* Footer - always at bottom, centered */
+footer {
+    text-align: center;
+    padding: var(--spacing-md);
+    color: var(--color-comment);
+}
+
+/* Links */
+a {
+    color: var(--color-cyan);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--color-hover);
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: var(--border-width) solid transparent;
+    border-radius: var(--border-radius);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: var(--font-weight-bold);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    min-width: 100px;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background-color: var(--color-purple);
+    color: var(--color-background);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--color-pink);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--color-foreground);
+    border-color: var(--color-border);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: var(--color-current-line);
+}
+
+.btn-danger {
+    background-color: var(--color-red);
+    color: var(--color-background);
+}
+
+.btn-danger:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+/* Forms */
+input, textarea, select {
+    font-family: inherit;
+    font-size: 1rem;
+    padding: var(--spacing-sm);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--border-radius);
+    background-color: var(--color-current-line);
+    color: var(--color-foreground);
+    transition: border-color var(--transition-fast);
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--color-purple);
+}
+
+/* Code and monospace */
+code, pre {
+    font-family: var(--font-mono);
+    background-color: var(--color-current-line);
+    border-radius: var(--border-radius);
+}
+
+code {
+    padding: 0.2em 0.4em;
+}
+
+pre {
+    padding: var(--spacing-md);
+    overflow-x: auto;
+}
+
+/* Toggle switch - CSS only */
+.toggle {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    gap: var(--spacing-sm);
+}
+
+.toggle input {
+    display: none;
+}
+
+.toggle .slider {
+    width: 44px;
+    height: 24px;
+    background-color: var(--color-current-line);
+    border-radius: 24px;
+    position: relative;
+    transition: background-color var(--transition-fast);
+}
+
+.toggle .slider::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: var(--color-foreground);
+    top: 2px;
+    left: 2px;
+    transition: transform var(--transition-fast);
+}
+
+.toggle input:checked + .slider {
+    background-color: var(--color-green);
+}
+
+.toggle input:checked + .slider::after {
+    transform: translateX(20px);
+}
+
+/* ==========================================================================
+   Accessibility - See AI.md PART 31
+   ========================================================================== */
+
+/* Screen reader only - hidden visually but accessible */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Allow focus for skip links */
+.sr-only-focusable:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}
+
+/* Skip links - first focusable elements */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--color-purple);
+    color: var(--color-background);
+    padding: var(--spacing-sm) var(--spacing-md);
+    z-index: 9999;
+    transition: top var(--transition-fast);
+    text-decoration: none;
+    font-weight: var(--font-weight-bold);
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Focus indicators - visible focus on all interactive elements */
+:focus {
+    outline: 2px solid var(--color-purple);
+    outline-offset: 2px;
+}
+
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+:focus-visible {
+    outline: 2px solid var(--color-purple);
+    outline-offset: 2px;
+}
+
+/* Minimum touch target size - 44x44px */
+button,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+a.btn {
+    min-width: 44px;
+    min-height: 44px;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* RTL support - use logical properties */
+[dir="rtl"] {
+    text-align: start;
+}
+
+[dir="rtl"] .icon-arrow,
+[dir="rtl"] .icon-chevron {
+    transform: scaleX(-1);
+}
+
+/* ARIA live region styling */
+[role="status"],
+[role="alert"] {
+    /* Visually distinct but not disruptive */
+}
+
+[role="alert"] {
+    color: var(--color-error);
+}
+
+/* Dialog/Modal accessibility */
+[role="dialog"] {
+    /* Focus trap handled by JS */
+}
+
+[role="dialog"][aria-modal="true"] {
+    /* Block background interaction */
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --color-border: var(--color-foreground);
+    }
+
+    .btn {
+        border: 2px solid currentColor;
+    }
+}
+
+/* Form accessibility enhancements */
+input:invalid,
+textarea:invalid,
+select:invalid {
+    border-color: var(--color-error);
+}
+
+input:required,
+textarea:required,
+select:required {
+    /* Required field indicator handled in HTML */
+}
+
+/* Error messages */
+.error,
+.error-message,
+[role="alert"] {
+    color: var(--color-error);
+}
+
+/* Success messages */
+.success,
+.success-message {
+    color: var(--color-success);
+}
+
+/* Warning messages */
+.warning,
+.warning-message {
+    color: var(--color-warning);
+}

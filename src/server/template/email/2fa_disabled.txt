@@ -1,0 +1,32 @@
+Subject: Two-Factor Authentication Disabled - {app_name}
+---
+2FA DISABLED
+
+This alert was sent to: {recipient_email}
+Account: {recipient_username}
+From: {app_name} ({fqdn})
+Time: {timestamp}
+
+Two-factor authentication has been disabled on your account.
+
+Method used: {method}
+  (password, recovery key, or admin action)
+
+------------------------------------------------------------------------
+DID NOT DO THIS?
+
+If you did not disable 2FA, your account may be compromised:
+
+1. Change your password immediately:
+   {app_url}/auth/password/forgot
+
+2. Re-enable 2FA:
+   {app_url}/settings/security
+
+3. Contact support:
+   {admin_email}
+------------------------------------------------------------------------
+
+--
+{app_name}
+{app_url}

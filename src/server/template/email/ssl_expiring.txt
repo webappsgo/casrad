@@ -1,0 +1,21 @@
+Subject: SSL Certificate Expiring - {app_name}
+---
+SSL CERTIFICATE EXPIRING
+
+Server: {app_name} ({fqdn})
+Time: {timestamp}
+
+Your SSL certificate is expiring soon.
+
+Domain: {fqdn}
+Expires in: {expires_in}
+Expiry date: {expiry_date}
+
+If you have automatic renewal enabled, the certificate should renew
+automatically. Otherwise, please renew your certificate manually.
+
+Admin Panel: {admin_url}/server/ssl
+
+--
+{app_name}
+{app_url}

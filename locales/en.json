@@ -1,0 +1,154 @@
+{
+  "meta": {
+    "language": "en",
+    "name": "English",
+    "native_name": "English",
+    "direction": "ltr",
+    "version": "1.0.0"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "update": "Update",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "refresh": "Refresh",
+    "close": "Close",
+    "open": "Open",
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm",
+    "actions": "Actions",
+    "settings": "Settings",
+    "help": "Help",
+    "about": "About"
+  },
+  "auth": {
+    "login": "Log in",
+    "logout": "Log out",
+    "register": "Register",
+    "forgot_password": "Forgot password?",
+    "reset_password": "Reset password",
+    "change_password": "Change password",
+    "email": "Email",
+    "username": "Username",
+    "password": "Password",
+    "confirm_password": "Confirm password",
+    "remember_me": "Remember me",
+    "sign_in": "Sign in",
+    "sign_up": "Sign up",
+    "sign_out": "Sign out"
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "library": "Library",
+    "playlists": "Playlists",
+    "artists": "Artists",
+    "albums": "Albums",
+    "tracks": "Tracks",
+    "podcasts": "Podcasts",
+    "radio": "Radio",
+    "settings": "Settings",
+    "admin": "Admin",
+    "profile": "Profile"
+  },
+  "player": {
+    "play": "Play",
+    "pause": "Pause",
+    "stop": "Stop",
+    "next": "Next track",
+    "previous": "Previous track",
+    "shuffle": "Shuffle",
+    "repeat": "Repeat",
+    "volume": "Volume",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "queue": "Queue",
+    "now_playing": "Now playing"
+  },
+  "library": {
+    "all_tracks": "All tracks",
+    "recently_added": "Recently added",
+    "recently_played": "Recently played",
+    "most_played": "Most played",
+    "favorites": "Favorites",
+    "add_to_playlist": "Add to playlist",
+    "add_to_queue": "Add to queue",
+    "remove_from_library": "Remove from library",
+    "scan_library": "Scan library",
+    "scanning": "Scanning..."
+  },
+  "errors": {
+    "required": "This field is required",
+    "invalid_email": "Invalid email address",
+    "invalid_password": "Invalid password",
+    "too_short": "Must be at least {min} characters",
+    "too_long": "Cannot exceed {max} characters",
+    "passwords_not_match": "Passwords do not match",
+    "not_found": "Not found",
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "server_error": "Server error",
+    "network_error": "Network error",
+    "unknown_error": "An unknown error occurred"
+  },
+  "messages": {
+    "saved": "Saved successfully",
+    "deleted": "Deleted successfully",
+    "updated": "Updated successfully",
+    "created": "Created successfully",
+    "loading_failed": "Failed to load",
+    "save_failed": "Failed to save",
+    "delete_failed": "Failed to delete",
+    "confirm_delete": "Are you sure you want to delete this?",
+    "no_results": "No results found",
+    "changes_saved": "Changes saved",
+    "changes_discarded": "Changes discarded"
+  },
+  "plurals": {
+    "tracks": {
+      "one": "{count} track",
+      "other": "{count} tracks"
+    },
+    "albums": {
+      "one": "{count} album",
+      "other": "{count} albums"
+    },
+    "artists": {
+      "one": "{count} artist",
+      "other": "{count} artists"
+    },
+    "playlists": {
+      "one": "{count} playlist",
+      "other": "{count} playlists"
+    },
+    "items": {
+      "zero": "No items",
+      "one": "{count} item",
+      "other": "{count} items"
+    }
+  },
+  "a11y": {
+    "skip_to_content": "Skip to main content",
+    "skip_to_navigation": "Skip to navigation",
+    "main_navigation": "Main navigation",
+    "close_dialog": "Close dialog",
+    "toggle_menu": "Toggle menu",
+    "loading_content": "Loading content",
+    "content_loaded": "Content loaded",
+    "form_error": "Form has errors",
+    "required_field": "required"
+  }
+}

@@ -1,0 +1,33 @@
+Subject: Security Alert - {app_name}
+---
+SECURITY ALERT
+
+This alert was sent to: {recipient_email}
+Account: {recipient_username}
+From: {app_name} ({fqdn})
+Time: {timestamp}
+
+{event}
+
+Details:
+  Source IP: {ip}
+  {details}
+
+------------------------------------------------------------------------
+RECOMMENDED ACTIONS
+
+If this activity was not you:
+
+1. Change your password immediately:
+   {app_url}/auth/password/forgot
+
+2. Review account activity:
+   {app_url}/settings/security
+
+3. Contact support if needed:
+   {admin_email}
+------------------------------------------------------------------------
+
+--
+{app_name}
+{app_url}

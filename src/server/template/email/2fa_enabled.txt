@@ -1,0 +1,35 @@
+Subject: Two-Factor Authentication Enabled - {app_name}
+---
+2FA ENABLED
+
+This alert was sent to: {recipient_email}
+Account: {recipient_username}
+From: {app_name} ({fqdn})
+Time: {timestamp}
+
+Two-factor authentication has been enabled on your account.
+
+Method: {method}
+IP Address: {ip}
+
+Your account is now more secure. You will need to provide a verification
+code in addition to your password when logging in.
+
+------------------------------------------------------------------------
+DID NOT DO THIS?
+
+If you did not enable 2FA, your account may be compromised:
+
+1. Change your password immediately:
+   {app_url}/auth/password/forgot
+
+2. Review your security settings:
+   {app_url}/settings/security
+
+3. Contact support:
+   {admin_email}
+------------------------------------------------------------------------
+
+--
+{app_name}
+{app_url}

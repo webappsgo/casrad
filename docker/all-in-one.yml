@@ -1,0 +1,103 @@
+# CASRAD - Complete Audio Streaming, Radio, and Distribution
+# All-in-One (app + postgresql + valkey + tor)
+# See AI.md PART 27/28 for Docker specification
+# nginx proxy address - http://172.17.0.1:80
+# Usage: docker compose -f all-in-one.yml up -d
+
+name: casrad
+
+x-logging: &default-logging
+  options:
+    max-size: '5m'
+    max-file: '1'
+  driver: json-file
+
+services:
+  server:
+    image: ghcr.io/casapps/casrad-aio:latest
+    container_name: casrad-server
+    hostname: ${BASE_HOST_NAME:-$HOSTNAME}
+    pull_policy: always
+    restart: always
+    logging: *default-logging
+
+    ports:
+      # HTTP (internal port is always 80)
+      - "80:80"
+      # MPD Protocol
+      - "6600:6600"
+      # RTMP Streaming
+      - "1935:1935"
+
+    volumes:
+      # Config and data directories
+      - casrad_config:/config/casrad
+      - casrad_data:/data/casrad
+      - casrad_logs:/data/log/casrad
+      - casrad_backups:/data/backups/casrad
+      - casrad_db:/data/db
+
+      # Music directories (customize these paths)
+      - /mnt/Music/Mp3:/mnt/Music/Mp3:ro
+      - /mnt/Podcasts:/mnt/Podcasts:ro
+      - /mnt/Audiobooks:/mnt/Audiobooks:ro
+      - /mnt/Playlists:/mnt/Playlists:ro
+
+    environment:
+      # Mode: production (strict host validation) or development (relaxed)
+      MODE: production
+      TZ: America/New_York
+      # DEBUG: "false"  # Uncomment to enable debug endpoints
+
+      # Server configuration
+      ADDRESS: 0.0.0.0
+      PORT: 80
+
+      # PostgreSQL (internal, managed by supervisor)
+      DB_NAME: casrad
+      DB_USER: casrad
+      DB_PASSWORD: casrad
+
+      # Valkey cache (internal, managed by supervisor)
+      # Uses unix socket: /run/valkey/valkey.sock
+
+      # Tor hidden service (disabled by default)
+      # TOR_ENABLED: "true"  # Uncomment to enable .onion service
+
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/casrad", "--status"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
+
+    networks:
+      - casrad
+
+    # Resource limits (higher for AIO with embedded services)
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 1G
+
+networks:
+  casrad:
+    driver: bridge
+    external: false
+
+volumes:
+  # CASRAD volumes
+  casrad_config:
+    driver: local
+  casrad_data:
+    driver: local
+  casrad_logs:
+    driver: local
+  casrad_backups:
+    driver: local
+  casrad_db:
+    driver: local

@@ -100,4 +100,37 @@ $RECYCLE.BIN/
 **/*.rewrite.sh
 **/*.refactor.sh
 
+# Go binaries
+binaries/
+releases/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go workspace
+go.work
+go.work.sum
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Runtime directories (created on deployment, not in repo)
+rootfs/
+
+# Local development
+.env
+.env.local
+*.local
+
+# Claude Code - only ignore settings files, not rules
+.claude/settings.local.json
+.claude/CLAUDE.md
+
 

@@ -1,0 +1,19 @@
+Subject: Backup Failed - {app_name}
+---
+BACKUP FAILED
+
+Server: {app_name} ({fqdn})
+Time: {timestamp}
+
+Your scheduled backup has failed.
+
+Error: {error}
+
+Please review your backup configuration and ensure adequate disk space
+is available.
+
+Admin Panel: {admin_url}/server/backup
+
+--
+{app_name}
+{app_url}

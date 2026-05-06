@@ -1,0 +1,35 @@
+Subject: New Login Detected - {app_name}
+---
+NEW LOGIN DETECTED
+
+This alert was sent to: {recipient_email}
+Account: {recipient_username}
+From: {app_name} ({fqdn})
+
+A new login was detected on your account:
+
+  Time:     {time}
+  IP:       {ip}
+  Location: {location}
+  Device:   {device}
+
+If this was you, no action is required.
+
+------------------------------------------------------------------------
+NOT YOU?
+
+If you did not log in, your account may be compromised. Take action:
+
+1. Change your password immediately:
+   {app_url}/auth/password/forgot
+
+2. Review your active sessions:
+   {app_url}/settings/sessions
+
+3. Enable 2FA if not already enabled:
+   {app_url}/settings/security
+------------------------------------------------------------------------
+
+--
+{app_name}
+{app_url}

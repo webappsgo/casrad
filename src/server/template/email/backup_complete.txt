@@ -1,0 +1,17 @@
+Subject: Backup Complete - {app_name}
+---
+BACKUP COMPLETE
+
+Server: {app_name} ({fqdn})
+Time: {timestamp}
+
+Your backup completed successfully.
+
+Filename: {filename}
+Size: {size}
+
+The backup file is stored in your configured backup location.
+
+--
+{app_name}
+{app_url}

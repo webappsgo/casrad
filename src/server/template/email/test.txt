@@ -1,0 +1,14 @@
+Subject: Test Email - {app_name}
+---
+TEST EMAIL
+
+This is a test email from {app_name}.
+
+Server: {fqdn}
+Time: {timestamp}
+
+If you received this email, your SMTP configuration is working correctly.
+
+--
+{app_name}
+{app_url}

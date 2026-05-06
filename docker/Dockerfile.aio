@@ -1,0 +1,124 @@
+# =============================================================================
+# All-in-One Dockerfile - includes app + postgresql + valkey + tor
+# See AI.md PART 27/28 for Docker specification
+# Base: debian:latest (stable, broad compatibility)
+# PORTS: Only 80 exposed (db/cache are internal-only)
+# =============================================================================
+FROM golang:bookworm AS builder
+
+# Install git (required for go mod download)
+RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
+
+ARG TARGETARCH
+ARG VERSION=dev
+ARG BUILD_DATE
+ARG COMMIT_ID
+
+WORKDIR /build
+
+# Copy go.mod first for layer caching
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy source and build
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=${TARGETARCH} go build \
+    -ldflags "-s -w -X 'main.Version=${VERSION}' -X 'main.CommitID=${COMMIT_ID}' -X 'main.BuildDate=${BUILD_DATE}'" \
+    -o /build/binary/casrad ./src
+
+# =============================================================================
+# Runtime Stage - Debian with PostgreSQL + Valkey + Tor + Supervisor
+# =============================================================================
+FROM debian:latest
+
+# ARGs for build-time values (set by docker build --build-arg)
+ARG VERSION=dev
+ARG BUILD_DATE
+ARG COMMIT_ID
+ARG LICENSE=MIT
+
+# Static Labels
+LABEL maintainer="casapps <casapps@example.com>" \
+      org.opencontainers.image.vendor="casapps" \
+      org.opencontainers.image.authors="casapps" \
+      org.opencontainers.image.title="casrad-aio" \
+      org.opencontainers.image.base.name="casrad-aio" \
+      org.opencontainers.image.description="Complete Audio Streaming, Radio, and Distribution - All-in-One (debian + postgresql + valkey + tor)" \
+      org.opencontainers.image.url="https://github.com/casapps/casrad" \
+      org.opencontainers.image.source="https://github.com/casapps/casrad" \
+      org.opencontainers.image.documentation="https://github.com/casapps/casrad" \
+      org.opencontainers.image.vcs-type="Git" \
+      com.github.containers.toolbox="false"
+
+# Dynamic Labels (from ARGs)
+LABEL org.opencontainers.image.licenses="${LICENSE}" \
+      org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.version="${VERSION}" \
+      org.opencontainers.image.schema-version="${VERSION}" \
+      org.opencontainers.image.revision="${COMMIT_ID}"
+
+# Install dependencies (PostgreSQL + Valkey + Tor + Supervisor + utilities)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    git \
+    postgresql \
+    postgresql-contrib \
+    valkey \
+    supervisor \
+    tor \
+    tzdata \
+    tini \
+    bash \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create directories - organized by component
+# NOTE: App directories are created by the server binary, not Dockerfile
+RUN mkdir -p /config/casrad /config/casrad/security /config/casrad/tor \
+             /config/valkey /config/postgres \
+             /data/casrad /data/casrad/tor \
+             /data/db/postgres /data/db/valkey \
+             /data/log/casrad /data/log/postgres \
+             /data/backups/casrad \
+             /run/postgresql /run/valkey \
+    && chown -R postgres:postgres /data/db/postgres /data/log/postgres /run/postgresql \
+    && chmod 700 /data/db/postgres \
+    && chmod 755 /run/valkey
+
+# Copy binary from builder stage (multi-stage build)
+COPY --from=builder /build/binary/casrad /usr/local/bin/casrad
+
+# Copy BUILD-TIME overlay (entrypoint.sh, supervisor configs, etc.) from docker/rootfs/
+COPY docker/rootfs/ /
+
+# Copy Dockerfile to image (for reference and backup)
+COPY docker/Dockerfile.aio /root/Dockerfile.aio
+
+# Make all binaries/scripts in /usr/local/bin executable (755)
+RUN chmod 755 /usr/local/bin/*
+
+# Set environment
+ENV MODE=production \
+    PORT=80 \
+    DEBUG=false \
+    TZ=America/New_York \
+    PGDATA=/data/db/postgres \
+    DB_HOST=/run/postgresql \
+    DB_NAME=casrad \
+    DB_USER=casrad \
+    DB_PASSWORD=casrad \
+    VALKEY_SOCKET=/run/valkey/valkey.sock \
+    TOR_ENABLED=false
+
+# Only expose app port - db/cache are internal
+EXPOSE 80
+
+# Stop signal for graceful shutdown
+STOPSIGNAL SIGRTMIN+3
+
+# Health check (long start period for services that need initialization)
+HEALTHCHECK --start-period=90s --interval=10s --timeout=5s --retries=3 \
+    CMD timeout 10s bash -c ':> /dev/tcp/127.0.0.1/80' || exit 1
+
+# Use tini as init with signal propagation
+ENTRYPOINT [ "tini", "-p", "SIGTERM", "--", "/usr/local/bin/entrypoint.sh" ]

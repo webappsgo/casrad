@@ -1,73 +1,144 @@
-# CASRAD - Complete Audio Streaming, Radio, and Distribution
+# CASRAD
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Go Version](https://img.shields.io/badge/Go-1.22-blue.svg)](https://golang.org/)
-[![Docker](https://img.shields.io/badge/Docker-Ready-green.svg)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 
-CASRAD is a revolutionary single-binary audio streaming and broadcasting server that consolidates the functionality of 50+ specialized servers into one self-contained, zero-configuration solution.
+## About
 
-## ✨ Key Features
+CASRAD (Complete Audio Streaming, Radio, and Distribution) is a single-binary audio streaming server that consolidates 50+ specialized servers into one zero-configuration solution. Supports MPD, Subsonic, Ampache, WebDAV, RTMP, and DLNA protocols.
 
-- **Single Binary**: ~40-50MB static binary containing everything
-- **Zero Configuration**: Works immediately upon execution
-- **6 Protocol Support**: MPD, Subsonic, Ampache, WebDAV, RTMP, DLNA
-- **Beautiful UI**: Dracula-themed interface with setup wizard
-- **Per-User Storage**: Isolated directories with quotas
-- **Auto Everything**: Service installation, SSL certificates, FFMPEG download
-- **Enterprise Ready**: Scales from personal to datacenter deployment
+## Official Site
 
-## 🚀 Quick Start
+https://casrad.casapps.us
 
-### Option 1: Download and Run
+## Features
+
+- Single binary deployment (~40-50MB static binary)
+- Zero configuration required - works immediately
+- Self-installing service (systemd, Windows Service, launchd)
+- Web-based admin interface with dark/light themes
+- Per-user storage with configurable quotas
+- Multiple database backends (SQLite default, PostgreSQL, MariaDB)
+- Automatic SSL via Let's Encrypt
+- Built-in scheduler for maintenance tasks
+- MusicBrainz integration for metadata
+
+## Production
+
+### Binary Installation
+
 ```bash
-wget https://github.com/casapps/casrad/releases/latest/download/casrad
-chmod +x casrad
-./casrad
+# Download and run
+wget https://github.com/casapps/casrad/releases/latest/download/casrad-linux-amd64
+chmod +x casrad-linux-amd64
+./casrad-linux-amd64
+
+# Or with systemd (as root)
+./casrad-linux-amd64 --service install
+./casrad-linux-amd64 --service start
 ```
 
-### Option 2: Docker
+### Docker
+
 ```bash
 docker run -d \
+  --name casrad \
   -p 80:80 \
   -p 6600:6600 \
   -p 1935:1935 \
-  -v /path/to/music:/mnt/Music/Mp3:ro \
+  -v /path/to/music:/mnt/Music \
   -v casrad-data:/var/lib/casrad \
   ghcr.io/casapps/casrad:latest
 ```
 
-Open your browser to `http://localhost` and complete the 2-minute setup wizard!
+### Docker Compose
 
-## 🎵 Protocol Support
+```yaml
+services:
+  casrad:
+    image: ghcr.io/casapps/casrad:latest
+    ports:
+      - "80:80"
+      - "6600:6600"
+      - "1935:1935"
+    volumes:
+      - /path/to/music:/mnt/Music
+      - casrad-data:/var/lib/casrad
+    environment:
+      - TZ=America/New_York
+    restart: unless-stopped
 
-| Protocol | Port | Compatible Clients |
-|----------|------|-------------------|
-| **MPD** | 6600 | ncmpcpp, Cantata, MPDroid, Maximum MPD |
-| **Subsonic** | HTTP | DSub, Ultrasonic, play:Sub, Sonixd |
-| **Ampache** | HTTP | PowerAmpache, Ampache Player |
-| **WebDAV** | HTTP | Any WebDAV client |
-| **RTMP** | 1935 | OBS, FFmpeg, VLC |
-| **DLNA** | 1900 | Smart TVs, Media Players |
+volumes:
+  casrad-data:
+```
 
-## 🔒 Security
+## Configuration
 
-All security features enabled by default:
-- Argon2id password hashing
-- Rate limiting (60 req/min)
-- Brute force protection
-- Session management
-- GeoIP integration (P3TERX)
-- Automatic security updates
+Configuration is via environment variables or web admin panel. No config files required.
 
-## 📁 Directory Structure
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `CASRAD_PORT` | auto (64000-64999) | HTTP port |
+| `CASRAD_ADDRESS` | 0.0.0.0 | Bind address |
+| `CASRAD_DATA` | /var/lib/casrad | Data directory |
+| `CASRAD_DB_DRIVER` | sqlite | Database (sqlite/postgres/mariadb) |
+| `CASRAD_ADMIN_PATH` | admin | Admin panel path |
+| `CASRAD_DEBUG` | false | Enable debug logging |
 
-- `/etc/casrad/` - Configuration (privileged)
-- `/var/lib/casrad/` - Data and users (privileged)
-- `~/.local/share/casrad/` - User mode data
-- `/mnt/Music/Mp3/` - Default music directory
+## API
 
-## Author
+### Protocol Endpoints
 
-🤖 casjay: [Github](https://github.com/casjay) 🤖
+| Protocol | Port/Path | Description |
+|----------|-----------|-------------|
+| HTTP/HTTPS | 80/443 | Web interface and REST API |
+| MPD | 6600 | Music Player Daemon protocol |
+| Subsonic | /subsonic/rest/* | Subsonic API v1.16.1 |
+| Ampache | /ampache/server/* | Ampache API v6.0.0 |
+| WebDAV | /webdav/* | File access |
+| RTMP | 1935 | Live streaming |
+| DLNA | 1900 (SSDP) | Media server |
 
-**One Binary. No Dependencies. No Configuration. Just Works.™**  
+### REST API
+
+| Endpoint | Description |
+|----------|-------------|
+| GET /api/v1/tracks | List tracks |
+| GET /api/v1/albums | List albums |
+| GET /api/v1/artists | List artists |
+| GET /api/v1/playlists | User playlists |
+| GET /api/v1/broadcasts | Stream mounts |
+| GET /healthz | Health check |
+| GET /version | Version info |
+
+See API documentation at `/openapi` when running.
+
+## Development
+
+```bash
+# Development build (to temp dir)
+make dev
+
+# Host binary (to binaries/)
+make host
+
+# All 8 platforms
+make build
+
+# Run tests
+make test
+
+# Docker image
+make docker
+
+# Release
+make release
+```
+
+### Requirements
+
+- Docker (for building - no local Go installation needed)
+- make
+
+## License
+
+MIT License - see [LICENSE.md](LICENSE.md)

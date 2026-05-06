@@ -1,0 +1,31 @@
+Subject: Secure Your Account - {app_name}
+---
+SECURE YOUR ACCOUNT
+
+This reminder was sent to: {recipient_email}
+Account: {recipient_username}
+From: {app_name} ({fqdn})
+
+We noticed that two-factor authentication (2FA) is not enabled on your
+account. Enabling 2FA adds an extra layer of security to protect your
+account from unauthorized access.
+
+To set up 2FA now, visit:
+
+{app_url}/settings/security
+
+------------------------------------------------------------------------
+WHY ENABLE 2FA?
+
+- Protects against password breaches
+- Prevents unauthorized access even if your password is compromised
+- Required for many compliance standards
+- Takes less than 2 minutes to set up
+
+To stop receiving these reminders, you can dismiss them in your settings
+or enable 2FA.
+------------------------------------------------------------------------
+
+--
+{app_name}
+{app_url}
