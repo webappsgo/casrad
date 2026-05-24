@@ -100,16 +100,16 @@ $RECYCLE.BIN/
 **/*.rewrite.sh
 **/*.refactor.sh
 
-# Go binaries
+# ============================================
+# PROJECT-SPECIFIC (add below default section)
+# ============================================
+
+# Build output
 binaries/
 releases/
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-*.test
-*.out
+
+# Runtime volume data (NEVER commit)
+volumes/
 
 # Go workspace
 go.work
@@ -121,16 +121,14 @@ go.work.sum
 *.swp
 *.swo
 
-# Runtime directories (created on deployment, not in repo)
-rootfs/
+# AI config directories (regenerated from AI.md rules, not committed)
+.claude/
+.cursor/
+.aider/
+.ai/
+.windsurf/
 
-# Local development
-.env
-.env.local
-*.local
-
-# Claude Code - only ignore settings files, not rules
-.claude/settings.local.json
-.claude/CLAUDE.md
+# Claude Code personal files (always gitignored)
+CLAUDE.local.md
 
 

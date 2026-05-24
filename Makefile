@@ -40,7 +40,7 @@ GO_DOCKER := docker run --rm \
 	-e CGO_ENABLED=0 \
 	golang:alpine
 
-.PHONY: build host release docker test dev clean
+.PHONY: build local release docker test dev
 
 # =============================================================================
 # BUILD - Build all platforms + host binary (via Docker with cached modules)
@@ -75,11 +75,11 @@ build: clean
 	@echo "Build complete: $(BINDIR)/"
 
 # =============================================================================
-# HOST - Build host binaries only (fast development builds)
+# LOCAL - Production test build to binaries/ (current platform only)
 # =============================================================================
-host: clean
+local: clean
 	@mkdir -p $(BINDIR)
-	@echo "Building host binaries version $(VERSION)..."
+	@echo "Building local binaries version $(VERSION)..."
 	@mkdir -p $(GOCACHE) $(GODIR)
 
 	# Tidy and download modules
@@ -106,7 +106,7 @@ host: clean
 			go build -ldflags \"$(LDFLAGS)\" -o $(BINDIR)/$(PROJECTNAME)-agent ./src/agent"; \
 	fi
 
-	@echo "Host build complete: $(BINDIR)/"
+	@echo "Local build complete: $(BINDIR)/"
 
 # =============================================================================
 # RELEASE - Manual local release (stable only)

@@ -26,20 +26,24 @@ SOFTWARE.
 
 This software includes the following third-party libraries:
 
-| Library | License | Copyright |
-|---------|---------|-----------|
-| golang.org/x/crypto | BSD-3-Clause | The Go Authors |
-| golang.org/x/term | BSD-3-Clause | The Go Authors |
-| golang.org/x/sys | BSD-3-Clause | The Go Authors |
-| golang.org/x/exp | BSD-3-Clause | The Go Authors |
-| modernc.org/sqlite | BSD-3-Clause | The Sqlite Authors |
-| modernc.org/libc | BSD-3-Clause | The Libc Authors |
-| modernc.org/mathutil | BSD-3-Clause | The Mathutil Authors |
-| modernc.org/memory | BSD-3-Clause | The Memory Authors |
-| github.com/google/uuid | BSD-3-Clause | Google Inc. |
-| github.com/dustin/go-humanize | MIT | Dustin Sallings |
-| github.com/mattn/go-isatty | MIT | Yasuhiro Matsumoto |
-| github.com/ncruces/go-strftime | MIT | Nuno Cruces |
-| github.com/remyoudompheng/bigfft | BSD-3-Clause | Remy Oudompheng |
+| Library | Version | License | Copyright |
+|---------|---------|---------|-----------|
+| golang.org/x/crypto | v0.31.0 | BSD-3-Clause | 2009 The Go Authors |
+| golang.org/x/term | v0.27.0 | BSD-3-Clause | 2009 The Go Authors |
+| golang.org/x/sys | v0.28.0 | BSD-3-Clause | 2009 The Go Authors |
+| golang.org/x/exp | v0.0.0-20241217172543-b2144cdd0a67 | BSD-3-Clause | 2009 The Go Authors |
+| modernc.org/sqlite | v1.34.5 | BSD-3-Clause | 2017 The Sqlite Authors |
+| modernc.org/libc | v1.55.3 | BSD-3-Clause | 2017 The Libc Authors |
+| modernc.org/mathutil | v1.6.0 | BSD-3-Clause | 2017 The Mathutil Authors |
+| modernc.org/memory | v1.8.0 | BSD-3-Clause | 2017 The Memory Authors |
+| github.com/google/uuid | v1.6.0 | BSD-3-Clause | 2018 Google Inc. |
+| github.com/boombuler/barcode | v1.0.1 | MIT | 2014 Florian Pigorsch |
+| github.com/pquerna/otp | v1.4.0 | Apache-2.0 | 2014 Paul Querna |
+| github.com/rs/cors | v1.11.1 | MIT | 2014 Olivier Poitrey |
+| github.com/go-chi/chi/v5 | v5.2.0 | MIT | 2015 Peter Kieltyka, Google Inc. |
+| github.com/dustin/go-humanize | v1.0.1 | MIT | 2012 Dustin Sallings |
+| github.com/mattn/go-isatty | v0.0.20 | MIT | 2014 Yasuhiro Matsumoto |
+| github.com/ncruces/go-strftime | v0.1.9 | MIT | 2019 Nuno Cruces |
+| github.com/remyoudompheng/bigfft | v0.0.0-20230129092748-24d4a6f8daec | BSD-3-Clause | 2012 Remy Oudompheng |
 
 Full license texts available at: https://spdx.org/licenses/

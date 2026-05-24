@@ -1,0 +1,43 @@
+# =============================================================================
+# Toolchain Image - casrad build/test/lint/scan environment
+# Tagged: ghcr.io/casapps/casrad:build
+# Rebuilt monthly via build-toolchain.yml (workflow_dispatch or 1st of month)
+# NEVER pin the Go version — always use golang:alpine (rolling)
+# =============================================================================
+FROM golang:alpine
+
+# No LABEL blocks — all image metadata is applied as OCI annotations at build time.
+# Pass --annotation flags to docker buildx build (or use docker/metadata-action
+# annotations: output in GitHub Actions). Annotations attach to the manifest index
+# and are visible on multiarch pulls. LABEL applies only to per-platform layers.
+
+# Install OS-level build and scan tools
+RUN apk add --no-cache \
+    bash \
+    git \
+    curl \
+    make \
+    gcc \
+    musl-dev \
+    ca-certificates \
+    tzdata
+
+# Install Go tooling — all tools pre-installed so CI jobs never run go install inline
+# CGO_ENABLED=0: pure Go, no C dependencies
+ENV CGO_ENABLED=0
+
+RUN go install honnef.co/go/tools/cmd/staticcheck@latest && \
+    go install golang.org/x/vuln/cmd/govulncheck@latest && \
+    go install github.com/google/go-licenses@latest && \
+    go install github.com/CycloneDX/cyclonedx-gomod/cmd/cyclonedx-gomod@latest && \
+    go install github.com/securego/gosec/v2/cmd/gosec@latest
+
+# Verify all tools are on PATH
+RUN staticcheck -version && \
+    govulncheck -version && \
+    go-licenses --version && \
+    cyclonedx-gomod version && \
+    gosec --version
+
+# Set working directory for CI job checkout
+WORKDIR /build
