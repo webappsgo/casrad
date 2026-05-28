@@ -1032,7 +1032,8 @@ func (s *SQLiteStore) GetSession(ctx context.Context, id string) (*model.Session
 	var ipAddress, userAgent, themeName sql.NullString
 	var expiresAt, lastActivity sql.NullTime
 
-	err := s.db.QueryRowContext(ctx, query, id).Scan(
+	// Hash the raw session ID before DB lookup — never store raw tokens
+	err := s.db.QueryRowContext(ctx, query, hashForStorage(id)).Scan(
 		&session.ID, &userID, &adminID, &ipAddress, &userAgent, &themeName,
 		&session.CreatedAt, &expiresAt, &lastActivity, &session.IsActive,
 	)
@@ -1100,8 +1101,9 @@ func (s *SQLiteStore) CreateSession(ctx context.Context, session *model.Session)
 		session.LastActivity = now
 	}
 
+	// Hash the raw session ID before writing to DB — never store raw tokens
 	_, err := s.db.ExecContext(ctx, query,
-		session.ID, userID, adminID, ipAddress, userAgent, themeName,
+		hashForStorage(session.ID), userID, adminID, ipAddress, userAgent, themeName,
 		session.CreatedAt, session.ExpiresAt, session.LastActivity, session.IsActive,
 	)
 	if err != nil {
@@ -1115,8 +1117,9 @@ func (s *SQLiteStore) UpdateSession(ctx context.Context, session *model.Session)
 	query := `UPDATE sessions SET last_activity = ?, is_active = ?, expires_at = ?
 		WHERE id = ?`
 
+	// Hash the raw session ID before DB update — never store raw tokens
 	_, err := s.db.ExecContext(ctx, query,
-		time.Now(), session.IsActive, session.ExpiresAt, session.ID,
+		time.Now(), session.IsActive, session.ExpiresAt, hashForStorage(session.ID),
 	)
 	if err != nil {
 		return fmt.Errorf("failed to update session: %w", err)
@@ -1126,7 +1129,8 @@ func (s *SQLiteStore) UpdateSession(ctx context.Context, session *model.Session)
 }
 
 func (s *SQLiteStore) DeleteSession(ctx context.Context, id string) error {
-	_, err := s.db.ExecContext(ctx, "DELETE FROM sessions WHERE id = ?", id)
+	// Hash the raw session ID before DB delete — never store raw tokens
+	_, err := s.db.ExecContext(ctx, "DELETE FROM sessions WHERE id = ?", hashForStorage(id))
 	if err != nil {
 		return fmt.Errorf("failed to delete session: %w", err)
 	}
@@ -1152,7 +1156,8 @@ func (s *SQLiteStore) GetToken(ctx context.Context, token string) (*model.APITok
 	var name, permissions, lastIP sql.NullString
 	var lastUsed, expiresAt sql.NullTime
 
-	err := s.db.QueryRowContext(ctx, query, token).Scan(
+	// Hash the raw token before DB lookup — never store raw tokens
+	err := s.db.QueryRowContext(ctx, query, hashForStorage(token)).Scan(
 		&apiToken.ID, &apiToken.UserID, &apiToken.Token, &name, &permissions,
 		&lastUsed, &lastIP, &apiToken.UseCount, &expiresAt, &apiToken.IsActive,
 		&apiToken.CreatedAt,
@@ -1240,8 +1245,9 @@ func (s *SQLiteStore) CreateToken(ctx context.Context, token *model.APIToken) (i
 		expiresAt = sql.NullTime{Time: token.ExpiresAt, Valid: true}
 	}
 
+	// Hash the raw token before writing to DB — never store raw tokens
 	result, err := s.db.ExecContext(ctx, query,
-		token.UserID, token.Token, name, permissions, expiresAt,
+		token.UserID, hashForStorage(token.Token), name, permissions, expiresAt,
 		token.IsActive, time.Now(),
 	)
 	if err != nil {

@@ -263,7 +263,8 @@ func (s *MemoryStore) GetSession(ctx context.Context, id string) (*model.Session
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
-	session, ok := s.sessions[id]
+	// Hash the raw session ID — never store raw tokens per AI.md PART 11
+	session, ok := s.sessions[hashForStorage(id)]
 	if !ok {
 		return nil, nil
 	}
@@ -283,7 +284,8 @@ func (s *MemoryStore) CreateSession(ctx context.Context, session *model.Session)
 		newSession.LastActivity = now
 	}
 
-	s.sessions[session.ID] = newSession
+	// Hash the raw session ID — never store raw tokens per AI.md PART 11
+	s.sessions[hashForStorage(session.ID)] = newSession
 	return nil
 }
 
@@ -291,13 +293,15 @@ func (s *MemoryStore) UpdateSession(ctx context.Context, session *model.Session)
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	if _, ok := s.sessions[session.ID]; !ok {
+	// Hash the raw session ID — never store raw tokens per AI.md PART 11
+	key := hashForStorage(session.ID)
+	if _, ok := s.sessions[key]; !ok {
 		return errors.New("session not found")
 	}
 
 	updated := copySession(session)
 	updated.LastActivity = time.Now()
-	s.sessions[session.ID] = updated
+	s.sessions[key] = updated
 	return nil
 }
 
@@ -305,7 +309,8 @@ func (s *MemoryStore) DeleteSession(ctx context.Context, id string) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	delete(s.sessions, id)
+	// Hash the raw session ID — never store raw tokens per AI.md PART 11
+	delete(s.sessions, hashForStorage(id))
 	return nil
 }
 
@@ -327,7 +332,8 @@ func (s *MemoryStore) GetToken(ctx context.Context, token string) (*model.APITok
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
-	id, ok := s.tokenByID[token]
+	// Hash the raw token — never store raw tokens per AI.md PART 11
+	id, ok := s.tokenByID[hashForStorage(token)]
 	if !ok {
 		return nil, nil
 	}
@@ -362,7 +368,8 @@ func (s *MemoryStore) CreateToken(ctx context.Context, token *model.APIToken) (i
 	newToken.CreatedAt = time.Now()
 
 	s.tokens[id] = newToken
-	s.tokenByID[token.Token] = id
+	// Hash the raw token — never store raw tokens per AI.md PART 11
+	s.tokenByID[hashForStorage(token.Token)] = id
 	return id, nil
 }
 
@@ -371,7 +378,8 @@ func (s *MemoryStore) DeleteToken(ctx context.Context, id int64) error {
 	defer s.mu.Unlock()
 
 	if token, ok := s.tokens[id]; ok {
-		delete(s.tokenByID, token.Token)
+		// tokenByID is keyed by hash — delete using hash of stored token
+		delete(s.tokenByID, hashForStorage(token.Token))
 	}
 	delete(s.tokens, id)
 	return nil

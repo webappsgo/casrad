@@ -7,6 +7,9 @@
     <meta name="description" content="{{.Description}}">
     <title>{{.Title}} - CASRAD</title>
     <link rel="stylesheet" href="/static/css/theme.css">
+    <link rel="manifest" href="/static/manifest.json">
+    <meta name="theme-color" content="#bd93f9">
+    <link rel="apple-touch-icon" href="/static/icons/icon-192.png">
     {{block "head" .}}{{end}}
 </head>
 <body class="theme-{{.Theme}}">
@@ -29,5 +32,11 @@
     {{end}}
 
     {{block "scripts" .}}{{end}}
+    <script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/static/sw.js', {scope: '/'})
+            .catch(function(err) { console.warn('SW registration failed:', err); });
+    }
+    </script>
 </body>
 </html>
