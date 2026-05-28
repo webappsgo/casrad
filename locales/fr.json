@@ -1,0 +1,154 @@
+{
+  "meta": {
+    "language": "fr",
+    "name": "French",
+    "native_name": "Français",
+    "direction": "ltr",
+    "version": "1.0.0"
+  },
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "create": "Créer",
+    "update": "Mettre à jour",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "submit": "Soumettre",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "sort": "Trier",
+    "refresh": "Actualiser",
+    "close": "Fermer",
+    "open": "Ouvrir",
+    "yes": "Oui",
+    "no": "Non",
+    "confirm": "Confirmer",
+    "actions": "Actions",
+    "settings": "Paramètres",
+    "help": "Aide",
+    "about": "À propos"
+  },
+  "auth": {
+    "login": "Se connecter",
+    "logout": "Se déconnecter",
+    "register": "S'inscrire",
+    "forgot_password": "Mot de passe oublié ?",
+    "reset_password": "Réinitialiser le mot de passe",
+    "change_password": "Changer le mot de passe",
+    "email": "Adresse e-mail",
+    "username": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "confirm_password": "Confirmer le mot de passe",
+    "remember_me": "Se souvenir de moi",
+    "sign_in": "Connexion",
+    "sign_up": "Inscription",
+    "sign_out": "Déconnexion"
+  },
+  "nav": {
+    "home": "Accueil",
+    "dashboard": "Tableau de bord",
+    "library": "Bibliothèque",
+    "playlists": "Listes de lecture",
+    "artists": "Artistes",
+    "albums": "Albums",
+    "tracks": "Pistes",
+    "podcasts": "Podcasts",
+    "radio": "Radio",
+    "settings": "Paramètres",
+    "admin": "Administration",
+    "profile": "Profil"
+  },
+  "player": {
+    "play": "Lire",
+    "pause": "Pause",
+    "stop": "Arrêter",
+    "next": "Piste suivante",
+    "previous": "Piste précédente",
+    "shuffle": "Aléatoire",
+    "repeat": "Répéter",
+    "volume": "Volume",
+    "mute": "Muet",
+    "unmute": "Réactiver le son",
+    "queue": "File d'attente",
+    "now_playing": "En cours de lecture"
+  },
+  "library": {
+    "all_tracks": "Toutes les pistes",
+    "recently_added": "Ajouté récemment",
+    "recently_played": "Lu récemment",
+    "most_played": "Les plus écoutés",
+    "favorites": "Favoris",
+    "add_to_playlist": "Ajouter à la liste de lecture",
+    "add_to_queue": "Ajouter à la file d'attente",
+    "remove_from_library": "Supprimer de la bibliothèque",
+    "scan_library": "Analyser la bibliothèque",
+    "scanning": "Analyse en cours..."
+  },
+  "errors": {
+    "required": "Ce champ est obligatoire",
+    "invalid_email": "Adresse e-mail invalide",
+    "invalid_password": "Mot de passe invalide",
+    "too_short": "Doit comporter au moins {min} caractères",
+    "too_long": "Ne peut pas dépasser {max} caractères",
+    "passwords_not_match": "Les mots de passe ne correspondent pas",
+    "not_found": "Introuvable",
+    "unauthorized": "Non autorisé",
+    "forbidden": "Interdit",
+    "server_error": "Erreur serveur",
+    "network_error": "Erreur réseau",
+    "unknown_error": "Une erreur inconnue s'est produite"
+  },
+  "messages": {
+    "saved": "Enregistré avec succès",
+    "deleted": "Supprimé avec succès",
+    "updated": "Mis à jour avec succès",
+    "created": "Créé avec succès",
+    "loading_failed": "Échec du chargement",
+    "save_failed": "Échec de l'enregistrement",
+    "delete_failed": "Échec de la suppression",
+    "confirm_delete": "Êtes-vous sûr de vouloir supprimer ceci ?",
+    "no_results": "Aucun résultat trouvé",
+    "changes_saved": "Modifications enregistrées",
+    "changes_discarded": "Modifications annulées"
+  },
+  "plurals": {
+    "tracks": {
+      "one": "{count} piste",
+      "other": "{count} pistes"
+    },
+    "albums": {
+      "one": "{count} album",
+      "other": "{count} albums"
+    },
+    "artists": {
+      "one": "{count} artiste",
+      "other": "{count} artistes"
+    },
+    "playlists": {
+      "one": "{count} liste de lecture",
+      "other": "{count} listes de lecture"
+    },
+    "items": {
+      "zero": "Aucun élément",
+      "one": "{count} élément",
+      "other": "{count} éléments"
+    }
+  },
+  "a11y": {
+    "skip_to_content": "Aller au contenu principal",
+    "skip_to_navigation": "Aller à la navigation",
+    "main_navigation": "Navigation principale",
+    "close_dialog": "Fermer la boîte de dialogue",
+    "toggle_menu": "Basculer le menu",
+    "loading_content": "Chargement du contenu",
+    "content_loaded": "Contenu chargé",
+    "form_error": "Le formulaire contient des erreurs",
+    "required_field": "obligatoire"
+  }
+}

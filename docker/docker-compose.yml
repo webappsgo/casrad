@@ -20,12 +20,13 @@ services:
     logging: *default-logging
 
     ports:
+      # AI.md PART 27 / docker-rules: bind to docker bridge gateway, not 0.0.0.0
       # HTTP (internal port is always 80)
-      - "80:80"
+      - "172.17.0.1:62080:80"
       # MPD Protocol
-      - "6600:6600"
+      - "172.17.0.1:6600:6600"
       # RTMP Streaming
-      - "1935:1935"
+      - "172.17.0.1:1935:1935"
 
     volumes:
       # Config and data directories

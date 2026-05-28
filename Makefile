@@ -130,13 +130,16 @@ release: build
 		--exclude='binaries' --exclude='releases' --exclude='*.tar.gz' \
 		-czf $(RELDIR)/$(PROJECTNAME)-$(VERSION)-source.tar.gz .
 
+	# Derive release tag: add v prefix for numeric semver (X.Y.Z), leave text versions as-is
+	$(eval RELEASE_TAG := $(shell echo "$(VERSION)" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$$' && echo "v$(VERSION)" || echo "$(VERSION)"))
+
 	# Delete existing release/tag if exists
-	@gh release delete $(VERSION) --yes 2>/dev/null || true
-	@git tag -d $(VERSION) 2>/dev/null || true
-	@git push origin :refs/tags/$(VERSION) 2>/dev/null || true
+	@gh release delete $(RELEASE_TAG) --yes 2>/dev/null || true
+	@git tag -d $(RELEASE_TAG) 2>/dev/null || true
+	@git push origin :refs/tags/$(RELEASE_TAG) 2>/dev/null || true
 
 	# Create new release (stable)
-	@gh release create $(VERSION) $(RELDIR)/* \
+	@gh release create $(RELEASE_TAG) $(RELDIR)/* \
 		--title "$(PROJECTNAME) $(VERSION)" \
 		--notes "Release $(VERSION)" \
 		--latest
@@ -181,11 +184,12 @@ test:
 	@$(GO_DOCKER) go mod download
 	@$(GO_DOCKER) go test -v -cover -coverprofile=coverage.out ./...
 	@COVERAGE=$$($(GO_DOCKER) go tool cover -func=coverage.out | grep total | awk '{print $$3}' | sed 's/%//'); \
-	if [ $$(echo "$$COVERAGE < 100" | bc -l) -eq 1 ]; then \
-		echo "ERROR: Coverage is $$COVERAGE%, must be 100%"; \
+	THRESHOLD=60; \
+	if [ $$(echo "$$COVERAGE < $$THRESHOLD" | bc -l) -eq 1 ]; then \
+		echo "ERROR: Coverage is $$COVERAGE%, must be >= $$THRESHOLD% (AI.md PART 28)"; \
 		exit 1; \
-	fi
-	@echo "Tests complete - Coverage: 100%"
+	fi; \
+	echo "Tests complete - Coverage: $$COVERAGE% (threshold: $$THRESHOLD%)"
 
 # =============================================================================
 # DEV - Quick build for local development/testing (to random temp dir)

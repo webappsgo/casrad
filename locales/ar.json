@@ -1,0 +1,154 @@
+{
+  "meta": {
+    "language": "ar",
+    "name": "Arabic",
+    "native_name": "العربية",
+    "direction": "rtl",
+    "version": "1.0.0"
+  },
+  "common": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "loading": "جارٍ التحميل...",
+    "error": "خطأ",
+    "success": "نجاح",
+    "submit": "إرسال",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "search": "بحث",
+    "filter": "تصفية",
+    "sort": "ترتيب",
+    "refresh": "تحديث",
+    "close": "إغلاق",
+    "open": "فتح",
+    "yes": "نعم",
+    "no": "لا",
+    "confirm": "تأكيد",
+    "actions": "إجراءات",
+    "settings": "الإعدادات",
+    "help": "مساعدة",
+    "about": "حول"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "register": "تسجيل",
+    "forgot_password": "هل نسيت كلمة المرور؟",
+    "reset_password": "إعادة تعيين كلمة المرور",
+    "change_password": "تغيير كلمة المرور",
+    "email": "البريد الإلكتروني",
+    "username": "اسم المستخدم",
+    "password": "كلمة المرور",
+    "confirm_password": "تأكيد كلمة المرور",
+    "remember_me": "تذكرني",
+    "sign_in": "دخول",
+    "sign_up": "إنشاء حساب",
+    "sign_out": "خروج"
+  },
+  "nav": {
+    "home": "الرئيسية",
+    "dashboard": "لوحة التحكم",
+    "library": "المكتبة",
+    "playlists": "قوائم التشغيل",
+    "artists": "الفنانون",
+    "albums": "الألبومات",
+    "tracks": "المقاطع",
+    "podcasts": "البودكاست",
+    "radio": "الراديو",
+    "settings": "الإعدادات",
+    "admin": "الإدارة",
+    "profile": "الملف الشخصي"
+  },
+  "player": {
+    "play": "تشغيل",
+    "pause": "إيقاف مؤقت",
+    "stop": "إيقاف",
+    "next": "المقطع التالي",
+    "previous": "المقطع السابق",
+    "shuffle": "تشغيل عشوائي",
+    "repeat": "تكرار",
+    "volume": "مستوى الصوت",
+    "mute": "كتم الصوت",
+    "unmute": "إلغاء كتم الصوت",
+    "queue": "قائمة الانتظار",
+    "now_playing": "يُشغَّل الآن"
+  },
+  "library": {
+    "all_tracks": "جميع المقاطع",
+    "recently_added": "أُضيف مؤخراً",
+    "recently_played": "شُغِّل مؤخراً",
+    "most_played": "الأكثر تشغيلاً",
+    "favorites": "المفضلة",
+    "add_to_playlist": "إضافة إلى قائمة التشغيل",
+    "add_to_queue": "إضافة إلى قائمة الانتظار",
+    "remove_from_library": "إزالة من المكتبة",
+    "scan_library": "فحص المكتبة",
+    "scanning": "جارٍ الفحص..."
+  },
+  "errors": {
+    "required": "هذا الحقل مطلوب",
+    "invalid_email": "عنوان البريد الإلكتروني غير صالح",
+    "invalid_password": "كلمة المرور غير صالحة",
+    "too_short": "يجب أن يحتوي على {min} أحرف على الأقل",
+    "too_long": "لا يمكن أن يتجاوز {max} حرفاً",
+    "passwords_not_match": "كلمتا المرور غير متطابقتين",
+    "not_found": "غير موجود",
+    "unauthorized": "غير مصرح",
+    "forbidden": "محظور",
+    "server_error": "خطأ في الخادم",
+    "network_error": "خطأ في الشبكة",
+    "unknown_error": "حدث خطأ غير معروف"
+  },
+  "messages": {
+    "saved": "تم الحفظ بنجاح",
+    "deleted": "تم الحذف بنجاح",
+    "updated": "تم التحديث بنجاح",
+    "created": "تم الإنشاء بنجاح",
+    "loading_failed": "فشل التحميل",
+    "save_failed": "فشل الحفظ",
+    "delete_failed": "فشل الحذف",
+    "confirm_delete": "هل أنت متأكد أنك تريد حذف هذا؟",
+    "no_results": "لم يتم العثور على نتائج",
+    "changes_saved": "تم حفظ التغييرات",
+    "changes_discarded": "تم تجاهل التغييرات"
+  },
+  "plurals": {
+    "tracks": {
+      "one": "{count} مقطع",
+      "other": "{count} مقاطع"
+    },
+    "albums": {
+      "one": "{count} ألبوم",
+      "other": "{count} ألبومات"
+    },
+    "artists": {
+      "one": "{count} فنان",
+      "other": "{count} فنانون"
+    },
+    "playlists": {
+      "one": "{count} قائمة تشغيل",
+      "other": "{count} قوائم تشغيل"
+    },
+    "items": {
+      "zero": "لا توجد عناصر",
+      "one": "{count} عنصر",
+      "other": "{count} عناصر"
+    }
+  },
+  "a11y": {
+    "skip_to_content": "تخطَّ إلى المحتوى الرئيسي",
+    "skip_to_navigation": "تخطَّ إلى التنقل",
+    "main_navigation": "التنقل الرئيسي",
+    "close_dialog": "إغلاق مربع الحوار",
+    "toggle_menu": "تبديل القائمة",
+    "loading_content": "جارٍ تحميل المحتوى",
+    "content_loaded": "تم تحميل المحتوى",
+    "form_error": "النموذج يحتوي على أخطاء",
+    "required_field": "مطلوب"
+  }
+}

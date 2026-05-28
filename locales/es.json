@@ -1,0 +1,154 @@
+{
+  "meta": {
+    "language": "es",
+    "name": "Spanish",
+    "native_name": "Español",
+    "direction": "ltr",
+    "version": "1.0.0"
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "update": "Actualizar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "submit": "Enviar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar",
+    "refresh": "Actualizar",
+    "close": "Cerrar",
+    "open": "Abrir",
+    "yes": "Sí",
+    "no": "No",
+    "confirm": "Confirmar",
+    "actions": "Acciones",
+    "settings": "Configuración",
+    "help": "Ayuda",
+    "about": "Acerca de"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "register": "Registrarse",
+    "forgot_password": "¿Olvidaste tu contraseña?",
+    "reset_password": "Restablecer contraseña",
+    "change_password": "Cambiar contraseña",
+    "email": "Correo electrónico",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "confirm_password": "Confirmar contraseña",
+    "remember_me": "Recuérdame",
+    "sign_in": "Entrar",
+    "sign_up": "Registrarse",
+    "sign_out": "Salir"
+  },
+  "nav": {
+    "home": "Inicio",
+    "dashboard": "Panel",
+    "library": "Biblioteca",
+    "playlists": "Listas de reproducción",
+    "artists": "Artistas",
+    "albums": "Álbumes",
+    "tracks": "Pistas",
+    "podcasts": "Podcasts",
+    "radio": "Radio",
+    "settings": "Configuración",
+    "admin": "Administración",
+    "profile": "Perfil"
+  },
+  "player": {
+    "play": "Reproducir",
+    "pause": "Pausar",
+    "stop": "Detener",
+    "next": "Pista siguiente",
+    "previous": "Pista anterior",
+    "shuffle": "Aleatorio",
+    "repeat": "Repetir",
+    "volume": "Volumen",
+    "mute": "Silenciar",
+    "unmute": "Activar sonido",
+    "queue": "Cola",
+    "now_playing": "Reproduciendo ahora"
+  },
+  "library": {
+    "all_tracks": "Todas las pistas",
+    "recently_added": "Añadido recientemente",
+    "recently_played": "Reproducido recientemente",
+    "most_played": "Más reproducido",
+    "favorites": "Favoritos",
+    "add_to_playlist": "Añadir a lista de reproducción",
+    "add_to_queue": "Añadir a la cola",
+    "remove_from_library": "Eliminar de la biblioteca",
+    "scan_library": "Escanear biblioteca",
+    "scanning": "Escaneando..."
+  },
+  "errors": {
+    "required": "Este campo es obligatorio",
+    "invalid_email": "Dirección de correo electrónico inválida",
+    "invalid_password": "Contraseña inválida",
+    "too_short": "Debe tener al menos {min} caracteres",
+    "too_long": "No puede superar {max} caracteres",
+    "passwords_not_match": "Las contraseñas no coinciden",
+    "not_found": "No encontrado",
+    "unauthorized": "No autorizado",
+    "forbidden": "Prohibido",
+    "server_error": "Error del servidor",
+    "network_error": "Error de red",
+    "unknown_error": "Se produjo un error desconocido"
+  },
+  "messages": {
+    "saved": "Guardado correctamente",
+    "deleted": "Eliminado correctamente",
+    "updated": "Actualizado correctamente",
+    "created": "Creado correctamente",
+    "loading_failed": "Error al cargar",
+    "save_failed": "Error al guardar",
+    "delete_failed": "Error al eliminar",
+    "confirm_delete": "¿Estás seguro de que quieres eliminar esto?",
+    "no_results": "No se encontraron resultados",
+    "changes_saved": "Cambios guardados",
+    "changes_discarded": "Cambios descartados"
+  },
+  "plurals": {
+    "tracks": {
+      "one": "{count} pista",
+      "other": "{count} pistas"
+    },
+    "albums": {
+      "one": "{count} álbum",
+      "other": "{count} álbumes"
+    },
+    "artists": {
+      "one": "{count} artista",
+      "other": "{count} artistas"
+    },
+    "playlists": {
+      "one": "{count} lista de reproducción",
+      "other": "{count} listas de reproducción"
+    },
+    "items": {
+      "zero": "Sin elementos",
+      "one": "{count} elemento",
+      "other": "{count} elementos"
+    }
+  },
+  "a11y": {
+    "skip_to_content": "Saltar al contenido principal",
+    "skip_to_navigation": "Saltar a la navegación",
+    "main_navigation": "Navegación principal",
+    "close_dialog": "Cerrar diálogo",
+    "toggle_menu": "Alternar menú",
+    "loading_content": "Cargando contenido",
+    "content_loaded": "Contenido cargado",
+    "form_error": "El formulario tiene errores",
+    "required_field": "obligatorio"
+  }
+}

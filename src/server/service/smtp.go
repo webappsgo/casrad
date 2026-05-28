@@ -129,7 +129,7 @@ func AutoDetectSMTP() *SMTPSettings {
 
 // testSMTPConnection tests if an SMTP server is available
 func testSMTPConnection(host string, port int) bool {
-	addr := fmt.Sprintf("%s:%d", host, port)
+	addr := net.JoinHostPort(host, fmt.Sprintf("%d", port))
 
 	// Try TCP connection with short timeout
 	conn, err := net.DialTimeout("tcp", addr, 3*time.Second)
@@ -160,7 +160,7 @@ func TestSMTPSettings(cfg *SMTPSettings) error {
 		return ErrSMTPNotConfigured
 	}
 
-	addr := fmt.Sprintf("%s:%d", cfg.Host, cfg.Port)
+	addr := net.JoinHostPort(cfg.Host, fmt.Sprintf("%d", cfg.Port))
 
 	// Connect
 	conn, err := net.DialTimeout("tcp", addr, 10*time.Second)

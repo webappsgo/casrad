@@ -1,0 +1,154 @@
+{
+  "meta": {
+    "language": "de",
+    "name": "German",
+    "native_name": "Deutsch",
+    "direction": "ltr",
+    "version": "1.0.0"
+  },
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "create": "Erstellen",
+    "update": "Aktualisieren",
+    "loading": "Wird geladen...",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "submit": "Absenden",
+    "back": "Zurück",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "search": "Suchen",
+    "filter": "Filtern",
+    "sort": "Sortieren",
+    "refresh": "Aktualisieren",
+    "close": "Schließen",
+    "open": "Öffnen",
+    "yes": "Ja",
+    "no": "Nein",
+    "confirm": "Bestätigen",
+    "actions": "Aktionen",
+    "settings": "Einstellungen",
+    "help": "Hilfe",
+    "about": "Über"
+  },
+  "auth": {
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "register": "Registrieren",
+    "forgot_password": "Passwort vergessen?",
+    "reset_password": "Passwort zurücksetzen",
+    "change_password": "Passwort ändern",
+    "email": "E-Mail",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "confirm_password": "Passwort bestätigen",
+    "remember_me": "Angemeldet bleiben",
+    "sign_in": "Einloggen",
+    "sign_up": "Registrieren",
+    "sign_out": "Ausloggen"
+  },
+  "nav": {
+    "home": "Startseite",
+    "dashboard": "Dashboard",
+    "library": "Bibliothek",
+    "playlists": "Wiedergabelisten",
+    "artists": "Künstler",
+    "albums": "Alben",
+    "tracks": "Titel",
+    "podcasts": "Podcasts",
+    "radio": "Radio",
+    "settings": "Einstellungen",
+    "admin": "Administration",
+    "profile": "Profil"
+  },
+  "player": {
+    "play": "Abspielen",
+    "pause": "Pause",
+    "stop": "Stopp",
+    "next": "Nächster Titel",
+    "previous": "Vorheriger Titel",
+    "shuffle": "Zufallswiedergabe",
+    "repeat": "Wiederholen",
+    "volume": "Lautstärke",
+    "mute": "Stumm schalten",
+    "unmute": "Ton einschalten",
+    "queue": "Warteschlange",
+    "now_playing": "Jetzt wird gespielt"
+  },
+  "library": {
+    "all_tracks": "Alle Titel",
+    "recently_added": "Zuletzt hinzugefügt",
+    "recently_played": "Zuletzt gespielt",
+    "most_played": "Am häufigsten gespielt",
+    "favorites": "Favoriten",
+    "add_to_playlist": "Zur Wiedergabeliste hinzufügen",
+    "add_to_queue": "Zur Warteschlange hinzufügen",
+    "remove_from_library": "Aus der Bibliothek entfernen",
+    "scan_library": "Bibliothek durchsuchen",
+    "scanning": "Wird durchsucht..."
+  },
+  "errors": {
+    "required": "Dieses Feld ist erforderlich",
+    "invalid_email": "Ungültige E-Mail-Adresse",
+    "invalid_password": "Ungültiges Passwort",
+    "too_short": "Muss mindestens {min} Zeichen lang sein",
+    "too_long": "Darf nicht mehr als {max} Zeichen enthalten",
+    "passwords_not_match": "Passwörter stimmen nicht überein",
+    "not_found": "Nicht gefunden",
+    "unauthorized": "Nicht autorisiert",
+    "forbidden": "Verboten",
+    "server_error": "Serverfehler",
+    "network_error": "Netzwerkfehler",
+    "unknown_error": "Ein unbekannter Fehler ist aufgetreten"
+  },
+  "messages": {
+    "saved": "Erfolgreich gespeichert",
+    "deleted": "Erfolgreich gelöscht",
+    "updated": "Erfolgreich aktualisiert",
+    "created": "Erfolgreich erstellt",
+    "loading_failed": "Laden fehlgeschlagen",
+    "save_failed": "Speichern fehlgeschlagen",
+    "delete_failed": "Löschen fehlgeschlagen",
+    "confirm_delete": "Sind Sie sicher, dass Sie dies löschen möchten?",
+    "no_results": "Keine Ergebnisse gefunden",
+    "changes_saved": "Änderungen gespeichert",
+    "changes_discarded": "Änderungen verworfen"
+  },
+  "plurals": {
+    "tracks": {
+      "one": "{count} Titel",
+      "other": "{count} Titel"
+    },
+    "albums": {
+      "one": "{count} Album",
+      "other": "{count} Alben"
+    },
+    "artists": {
+      "one": "{count} Künstler",
+      "other": "{count} Künstler"
+    },
+    "playlists": {
+      "one": "{count} Wiedergabeliste",
+      "other": "{count} Wiedergabelisten"
+    },
+    "items": {
+      "zero": "Keine Elemente",
+      "one": "{count} Element",
+      "other": "{count} Elemente"
+    }
+  },
+  "a11y": {
+    "skip_to_content": "Zum Hauptinhalt springen",
+    "skip_to_navigation": "Zur Navigation springen",
+    "main_navigation": "Hauptnavigation",
+    "close_dialog": "Dialog schließen",
+    "toggle_menu": "Menü umschalten",
+    "loading_content": "Inhalt wird geladen",
+    "content_loaded": "Inhalt geladen",
+    "form_error": "Das Formular enthält Fehler",
+    "required_field": "erforderlich"
+  }
+}

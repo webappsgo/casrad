@@ -1,0 +1,154 @@
+{
+  "meta": {
+    "language": "ja",
+    "name": "Japanese",
+    "native_name": "日本語",
+    "direction": "ltr",
+    "version": "1.0.0"
+  },
+  "common": {
+    "save": "保存",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "edit": "編集",
+    "create": "作成",
+    "update": "更新",
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "success": "成功",
+    "submit": "送信",
+    "back": "戻る",
+    "next": "次へ",
+    "previous": "前へ",
+    "search": "検索",
+    "filter": "フィルター",
+    "sort": "並べ替え",
+    "refresh": "更新",
+    "close": "閉じる",
+    "open": "開く",
+    "yes": "はい",
+    "no": "いいえ",
+    "confirm": "確認",
+    "actions": "操作",
+    "settings": "設定",
+    "help": "ヘルプ",
+    "about": "について"
+  },
+  "auth": {
+    "login": "ログイン",
+    "logout": "ログアウト",
+    "register": "登録",
+    "forgot_password": "パスワードをお忘れですか？",
+    "reset_password": "パスワードをリセット",
+    "change_password": "パスワードを変更",
+    "email": "メールアドレス",
+    "username": "ユーザー名",
+    "password": "パスワード",
+    "confirm_password": "パスワードの確認",
+    "remember_me": "ログイン状態を保持",
+    "sign_in": "サインイン",
+    "sign_up": "サインアップ",
+    "sign_out": "サインアウト"
+  },
+  "nav": {
+    "home": "ホーム",
+    "dashboard": "ダッシュボード",
+    "library": "ライブラリ",
+    "playlists": "プレイリスト",
+    "artists": "アーティスト",
+    "albums": "アルバム",
+    "tracks": "トラック",
+    "podcasts": "ポッドキャスト",
+    "radio": "ラジオ",
+    "settings": "設定",
+    "admin": "管理",
+    "profile": "プロフィール"
+  },
+  "player": {
+    "play": "再生",
+    "pause": "一時停止",
+    "stop": "停止",
+    "next": "次のトラック",
+    "previous": "前のトラック",
+    "shuffle": "シャッフル",
+    "repeat": "リピート",
+    "volume": "音量",
+    "mute": "ミュート",
+    "unmute": "ミュート解除",
+    "queue": "キュー",
+    "now_playing": "再生中"
+  },
+  "library": {
+    "all_tracks": "すべてのトラック",
+    "recently_added": "最近追加された",
+    "recently_played": "最近再生された",
+    "most_played": "最も再生された",
+    "favorites": "お気に入り",
+    "add_to_playlist": "プレイリストに追加",
+    "add_to_queue": "キューに追加",
+    "remove_from_library": "ライブラリから削除",
+    "scan_library": "ライブラリをスキャン",
+    "scanning": "スキャン中..."
+  },
+  "errors": {
+    "required": "このフィールドは必須です",
+    "invalid_email": "メールアドレスが無効です",
+    "invalid_password": "パスワードが無効です",
+    "too_short": "{min}文字以上必要です",
+    "too_long": "{max}文字を超えることはできません",
+    "passwords_not_match": "パスワードが一致しません",
+    "not_found": "見つかりません",
+    "unauthorized": "認証されていません",
+    "forbidden": "禁止されています",
+    "server_error": "サーバーエラー",
+    "network_error": "ネットワークエラー",
+    "unknown_error": "不明なエラーが発生しました"
+  },
+  "messages": {
+    "saved": "保存しました",
+    "deleted": "削除しました",
+    "updated": "更新しました",
+    "created": "作成しました",
+    "loading_failed": "読み込みに失敗しました",
+    "save_failed": "保存に失敗しました",
+    "delete_failed": "削除に失敗しました",
+    "confirm_delete": "本当に削除しますか？",
+    "no_results": "結果が見つかりません",
+    "changes_saved": "変更を保存しました",
+    "changes_discarded": "変更を破棄しました"
+  },
+  "plurals": {
+    "tracks": {
+      "one": "{count}トラック",
+      "other": "{count}トラック"
+    },
+    "albums": {
+      "one": "{count}アルバム",
+      "other": "{count}アルバム"
+    },
+    "artists": {
+      "one": "{count}アーティスト",
+      "other": "{count}アーティスト"
+    },
+    "playlists": {
+      "one": "{count}プレイリスト",
+      "other": "{count}プレイリスト"
+    },
+    "items": {
+      "zero": "アイテムなし",
+      "one": "{count}件",
+      "other": "{count}件"
+    }
+  },
+  "a11y": {
+    "skip_to_content": "メインコンテンツへスキップ",
+    "skip_to_navigation": "ナビゲーションへスキップ",
+    "main_navigation": "メインナビゲーション",
+    "close_dialog": "ダイアログを閉じる",
+    "toggle_menu": "メニューを切り替える",
+    "loading_content": "コンテンツを読み込み中",
+    "content_loaded": "コンテンツを読み込みました",
+    "form_error": "フォームにエラーがあります",
+    "required_field": "必須"
+  }
+}

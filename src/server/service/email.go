@@ -175,7 +175,7 @@ func (s *EmailService) formatAddress(name, email string) string {
 
 // sendMail sends the email using SMTP
 func (s *EmailService) sendMail(to []string, msg []byte) error {
-	addr := fmt.Sprintf("%s:%d", s.config.Host, s.config.Port)
+	addr := net.JoinHostPort(s.config.Host, fmt.Sprintf("%d", s.config.Port))
 
 	// Create SMTP client
 	conn, err := net.DialTimeout("tcp", addr, 30*time.Second)
