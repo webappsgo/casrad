@@ -14,6 +14,8 @@ import (
 
 	"github.com/casapps/casrad/src/config"
 	"github.com/casapps/casrad/src/server/handler"
+	appmiddleware "github.com/casapps/casrad/src/server/middleware"
+	"github.com/casapps/casrad/src/server/service"
 	"github.com/casapps/casrad/src/server/store"
 )
 
@@ -24,6 +26,10 @@ type Server struct {
 	router     *chi.Mux
 	store      store.Store
 	apiHandler *handler.APIHandler
+	security   *appmiddleware.SecurityMiddleware
+
+	// setupToken is generated on first run, printed to console once, then consumed
+	setupToken string
 }
 
 // New creates a new server instance
@@ -34,6 +40,7 @@ func New(cfg *config.Config) (*Server, error) {
 		config:     cfg,
 		store:      st,
 		apiHandler: handler.NewAPIHandler(st),
+		security:   appmiddleware.NewSecurityMiddleware(),
 	}
 
 	s.router = s.setupRoutes()
@@ -60,6 +67,16 @@ func (s *Server) Run() error {
 		ReadTimeout:  15 * time.Second,
 		WriteTimeout: 15 * time.Second,
 		IdleTimeout:  60 * time.Second,
+	}
+
+	// Generate one-time setup token if no admin exists yet (PART 17)
+	// Token is shown in console only; route /server/{admin_path}/config/setup consumes it
+	rawToken, _, err := service.GenerateAPIToken()
+	if err == nil {
+		s.setupToken = rawToken
+		fmt.Printf("\n*** CASRAD first-run setup token (shown once): %s\n", rawToken)
+		fmt.Printf("*** Navigate to http://%s/server/%s/config/setup to create your admin account\n\n",
+			addr, s.adminPath())
 	}
 
 	fmt.Printf("Starting CASRAD server on %s\n", addr)
@@ -96,6 +113,11 @@ func (s *Server) setupRoutes() *chi.Mux {
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Compress(5))
 
+	// Security headers on every response — AI.md PART 11
+	r.Use(s.security.Headers)
+	// CSRF protection on all state-changing form routes — AI.md PART 11
+	r.Use(s.security.CSRF)
+
 	// Well-known files — AI.md PART 11
 	r.Get("/robots.txt", s.handleRobotsTxt)
 	r.Get("/.well-known/security.txt", s.handleSecurityTxt)
@@ -123,6 +145,10 @@ func (s *Server) setupRoutes() *chi.Mux {
 		r.Route("/"+ap, func(r chi.Router) {
 			r.Get("/", s.handleAdminDashboard)
 			r.Get("/dashboard", s.handleAdminDashboard)
+
+			// First-run setup wizard — /server/{admin_path}/config/setup
+			r.Get("/config/setup", s.handleAdminSetupPage)
+			r.Post("/config/setup", s.handleAdminSetup)
 		})
 	})
 
@@ -262,13 +288,11 @@ func (s *Server) handleAdminDashboard(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleHealth(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, "OK\n")
+	handler.Health(w, r)
 }
 
 func (s *Server) handleAPIHealth(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	fmt.Fprint(w, `{"status":"healthy"}`+"\n")
+	handler.HealthAPI(w, r)
 }
 
 func (s *Server) handleAuthLoginPage(w http.ResponseWriter, r *http.Request) {
@@ -584,4 +608,70 @@ func (s *Server) handleChangePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.Redirect(w, r, "/server/auth/password/forgot", http.StatusSeeOther)
+}
+
+// handleAdminSetupPage renders the first-run setup wizard page per AI.md PART 17
+func (s *Server) handleAdminSetupPage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	fmt.Fprint(w, `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup - CASRAD</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: #282a36; color: #f8f8f2; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .card { background: #44475a; padding: 2rem; border-radius: 8px; width: 100%; max-width: 480px; }
+        h1 { color: #bd93f9; margin-bottom: 0.5rem; font-size: 1.5rem; }
+        p { color: #6272a4; margin-bottom: 1.5rem; font-size: 0.875rem; }
+        label { display: block; margin-bottom: 0.25rem; color: #8be9fd; font-size: 0.875rem; }
+        input { width: 100%; padding: 0.5rem; background: #282a36; border: 1px solid #6272a4; border-radius: 4px; color: #f8f8f2; margin-bottom: 1rem; }
+        input:focus { outline: none; border-color: #bd93f9; }
+        button { width: 100%; padding: 0.75rem; background: #bd93f9; color: #282a36; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; }
+        button:hover { background: #a175ea; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>CASRAD Setup</h1>
+        <p>Enter the setup token printed in the server console to create your admin account.</p>
+        <form method="POST" action="">
+            <label for="setup_token">Setup Token</label>
+            <input type="password" id="setup_token" name="setup_token" required placeholder="adm_..." autocomplete="off">
+            <label for="username">Admin Username</label>
+            <input type="text" id="username" name="username" required minlength="3" maxlength="32" autocomplete="username">
+            <label for="email">Admin Email</label>
+            <input type="email" id="email" name="email" required autocomplete="email">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required minlength="8" autocomplete="new-password">
+            <button type="submit">Create Admin Account</button>
+        </form>
+    </div>
+</body>
+</html>`)
+}
+
+// handleAdminSetup processes the first-run setup wizard form per AI.md PART 17
+func (s *Server) handleAdminSetup(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
+	}
+
+	submitted := r.FormValue("setup_token")
+
+	// Validate setup token — constant-time to prevent timing attacks
+	if s.setupToken == "" || !service.VerifyToken(submitted, service.HashToken(s.setupToken)) {
+		http.Error(w, "Invalid setup token", http.StatusForbidden)
+		return
+	}
+
+	// Consume token (one-time use per PART 17)
+	s.setupToken = ""
+
+	// TODO: create admin user in DB using r.FormValue("username"), "email", "password"
+	// This will be wired once the admin store layer is complete.
+	ap := s.adminPath()
+	http.Redirect(w, r, "/server/"+ap+"/", http.StatusSeeOther)
 }

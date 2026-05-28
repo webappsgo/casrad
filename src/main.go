@@ -11,7 +11,9 @@ import (
 
 	"github.com/casapps/casrad/src/config"
 	"github.com/casapps/casrad/src/mode"
+	"github.com/casapps/casrad/src/scheduler"
 	"github.com/casapps/casrad/src/server"
+	"github.com/casapps/casrad/src/server/handler"
 	"github.com/casapps/casrad/src/service"
 )
 
@@ -353,6 +355,19 @@ Environment Variables:
 	if configPath != "" {
 		os.Setenv("CASRAD_CONFIG", configPath)
 	}
+
+	// Initialize health handler with build info and mode
+	handler.AppVersion = Version
+	handler.BuildCommit = CommitID
+	handler.BuildDate = BuildDate
+	handler.SetMode(string(mode.Get()))
+	handler.InitHealth()
+
+	// Start built-in scheduler with all 12 required tasks per AI.md PART 19
+	sched := scheduler.New()
+	scheduler.RegisterDefaultTasks(sched)
+	sched.Start()
+	defer sched.Stop()
 
 	// Create and start the HTTP server
 	srv, err := server.New(cfg)
