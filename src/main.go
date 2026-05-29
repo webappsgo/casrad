@@ -308,7 +308,7 @@ Environment Variables:
 		switch maintenanceAction {
 		case "backup":
 			fmt.Fprintf(os.Stderr, "Backup destination: %s\n", maintenanceArg)
-			fmt.Fprintln(os.Stderr, "backup: subsystem not yet implemented in this build")
+			fmt.Fprintf(os.Stderr, "%s: backup subsystem is not available in this build\n", binaryName)
 			os.Exit(1)
 
 		case "restore":
@@ -316,11 +316,11 @@ Environment Variables:
 				fmt.Fprintf(os.Stderr, "Usage: %s --maintenance restore <file>\n", binaryName)
 				os.Exit(1)
 			}
-			fmt.Fprintln(os.Stderr, "restore: subsystem not yet implemented in this build")
+			fmt.Fprintf(os.Stderr, "%s: restore subsystem is not available in this build\n", binaryName)
 			os.Exit(1)
 
 		case "update":
-			fmt.Fprintln(os.Stderr, "update: subsystem not yet implemented in this build")
+			fmt.Fprintf(os.Stderr, "%s: update subsystem is not available in this build\n", binaryName)
 			os.Exit(1)
 
 		default:

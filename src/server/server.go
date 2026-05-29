@@ -15,18 +15,20 @@ import (
 	"github.com/casapps/casrad/src/config"
 	"github.com/casapps/casrad/src/server/handler"
 	appmiddleware "github.com/casapps/casrad/src/server/middleware"
+	"github.com/casapps/casrad/src/server/model"
 	"github.com/casapps/casrad/src/server/service"
 	"github.com/casapps/casrad/src/server/store"
 )
 
 // Server represents the HTTP server
 type Server struct {
-	config     *config.Config
-	httpServer *http.Server
-	router     *chi.Mux
-	store      store.Store
-	apiHandler *handler.APIHandler
-	security   *appmiddleware.SecurityMiddleware
+	config      *config.Config
+	httpServer  *http.Server
+	router      *chi.Mux
+	store       store.Store
+	apiHandler  *handler.APIHandler
+	security    *appmiddleware.SecurityMiddleware
+	authService *service.AuthService
 
 	// setupToken is generated on first run, printed to console once, then consumed
 	setupToken string
@@ -37,10 +39,11 @@ func New(cfg *config.Config) (*Server, error) {
 	st := store.NewMemoryStore()
 
 	s := &Server{
-		config:     cfg,
-		store:      st,
-		apiHandler: handler.NewAPIHandler(st),
-		security:   appmiddleware.NewSecurityMiddleware(),
+		config:      cfg,
+		store:       st,
+		apiHandler:  handler.NewAPIHandler(st),
+		security:    appmiddleware.NewSecurityMiddleware(),
+		authService: service.NewAuthService(st),
 	}
 
 	s.router = s.setupRoutes()
@@ -670,8 +673,36 @@ func (s *Server) handleAdminSetup(w http.ResponseWriter, r *http.Request) {
 	// Consume token (one-time use per PART 17)
 	s.setupToken = ""
 
-	// TODO: create admin user in DB using r.FormValue("username"), "email", "password"
-	// This will be wired once the admin store layer is complete.
+	username := r.FormValue("username")
+	email := r.FormValue("email")
+	password := r.FormValue("password")
+
+	// Validate required fields
+	if username == "" || email == "" || password == "" {
+		http.Error(w, "All fields are required", http.StatusBadRequest)
+		return
+	}
+
+	// Hash password with Argon2id per AI.md PART 11
+	passwordHash, err := s.authService.HashPassword(password)
+	if err != nil {
+		http.Error(w, "Failed to hash password", http.StatusInternalServerError)
+		return
+	}
+
+	admin := &model.Admin{
+		Username:     username,
+		Email:        email,
+		PasswordHash: passwordHash,
+		Role:         "admin",
+		IsActive:     true,
+	}
+
+	if _, err := s.store.CreateAdmin(r.Context(), admin); err != nil {
+		http.Error(w, "Failed to create admin account", http.StatusInternalServerError)
+		return
+	}
+
 	ap := s.adminPath()
 	http.Redirect(w, r, "/server/"+ap+"/", http.StatusSeeOther)
 }

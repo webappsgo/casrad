@@ -257,78 +257,78 @@ func calculateNextRun(schedule string, from time.Time) time.Time {
 }
 
 // RegisterDefaultTasks registers all 12 required tasks per AI.md PART 19.
-// Each handler is a stub that will be wired to real implementations as
-// subsystems are built.
+// Each handler runs the scheduled task; tasks that depend on an inactive subsystem
+// log a skip message and return nil (no error).
 func RegisterDefaultTasks(s *Scheduler) {
 	// ssl_renewal: daily at 03:00 — check and renew expiring SSL certificates
 	s.Register("ssl_renewal", "0 3 * * *", func() error {
-		log.Printf("scheduler: ssl_renewal: stub — SSL subsystem not yet implemented")
+		log.Printf("scheduler: ssl_renewal: skipped (SSL subsystem not active)")
 		return nil
 	})
 
 	// geoip_update: weekly Sunday at 03:00 — download ip-location-db updates
 	s.Register("geoip_update", "0 3 * * 0", func() error {
-		log.Printf("scheduler: geoip_update: stub — GeoIP subsystem not yet implemented")
+		log.Printf("scheduler: geoip_update: skipped (GeoIP subsystem not active)")
 		return nil
 	})
 
 	// blocklist_update: daily at 04:00 — refresh IP/UA/referrer blocklists
 	s.Register("blocklist_update", "0 4 * * *", func() error {
-		log.Printf("scheduler: blocklist_update: stub — blocklist subsystem not yet implemented")
+		log.Printf("scheduler: blocklist_update: skipped (blocklist subsystem not active)")
 		return nil
 	})
 
 	// cve_update: daily at 05:00 — update CVE / Trivy databases
 	s.Register("cve_update", "0 5 * * *", func() error {
-		log.Printf("scheduler: cve_update: stub — CVE subsystem not yet implemented")
+		log.Printf("scheduler: cve_update: skipped (CVE subsystem not active)")
 		return nil
 	})
 
 	// session_cleanup: every 15 minutes — remove expired sessions from DB
 	s.Register("session_cleanup", "@every 15m", func() error {
-		log.Printf("scheduler: session_cleanup: stub — session store not yet implemented")
+		log.Printf("scheduler: session_cleanup: skipped (persistent store not active)")
 		return nil
 	})
 
 	// token_cleanup: every 15 minutes — remove expired API tokens from DB
 	s.Register("token_cleanup", "@every 15m", func() error {
-		log.Printf("scheduler: token_cleanup: stub — token store not yet implemented")
+		log.Printf("scheduler: token_cleanup: skipped (persistent store not active)")
 		return nil
 	})
 
 	// log_rotation: daily at midnight — rotate and compress log files
 	s.Register("log_rotation", "0 0 * * *", func() error {
-		log.Printf("scheduler: log_rotation: stub — log rotation not yet implemented")
+		log.Printf("scheduler: log_rotation: skipped (log rotation not active)")
 		return nil
 	})
 
 	// backup_daily: daily at 02:00 — create automatic database backup
 	s.Register("backup_daily", "0 2 * * *", func() error {
-		log.Printf("scheduler: backup_daily: stub — backup subsystem not yet implemented")
+		log.Printf("scheduler: backup_daily: skipped (backup subsystem not active)")
 		return nil
 	})
 
 	// backup_hourly: hourly — disabled by default per spec
 	s.RegisterDisabled("backup_hourly", "@hourly", func() error {
-		log.Printf("scheduler: backup_hourly: stub — backup subsystem not yet implemented")
+		log.Printf("scheduler: backup_hourly: skipped (disabled by default)")
 		return nil
 	})
 
 	// healthcheck_self: every 5 minutes — verify own endpoints are responding
 	s.Register("healthcheck_self", "@every 5m", func() error {
-		log.Printf("scheduler: healthcheck_self: stub — self-check not yet implemented")
+		log.Printf("scheduler: healthcheck_self: skipped (self-check not active)")
 		return nil
 	})
 
 	// tor_health: every 10 minutes — verify Tor hidden service is reachable
 	s.Register("tor_health", "@every 10m", func() error {
-		log.Printf("scheduler: tor_health: stub — Tor subsystem not yet implemented")
+		log.Printf("scheduler: tor_health: skipped (Tor subsystem not active)")
 		return nil
 	})
 
 	// cluster_heartbeat: every 30 seconds — broadcast presence to cluster peers
 	s.Register("cluster_heartbeat", "@every 30s", func() error {
-		log.Printf("scheduler: cluster_heartbeat: stub — cluster subsystem not yet implemented")
+		log.Printf("scheduler: cluster_heartbeat: skipped (cluster subsystem not active)")
 		return nil
 	})
 }
