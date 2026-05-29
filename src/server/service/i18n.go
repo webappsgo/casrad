@@ -23,10 +23,11 @@ type I18nConfig struct {
 // DefaultI18nConfig returns default i18n configuration
 func DefaultI18nConfig() I18nConfig {
 	return I18nConfig{
-		Enabled:            true,
-		DefaultLanguage:    "en",
-		FallbackLanguage:   "en",
-		AvailableLanguages: []string{"en"},
+		Enabled:         true,
+		DefaultLanguage: "en",
+		FallbackLanguage: "en",
+		// All 7 required languages per AI.md PART 31
+		AvailableLanguages: []string{"en", "es", "zh", "fr", "ar", "de", "ja"},
 		CookieName:         "lang",
 		CookieMaxAge:       31536000, // 1 year
 	}
@@ -78,7 +79,8 @@ func (s *I18nService) LoadTranslations() error {
 	defer s.mu.Unlock()
 
 	for _, lang := range s.config.AvailableLanguages {
-		filename := "locales/" + lang + ".json"
+		// Embedded FS via //go:embed *.json uses bare filenames (no directory prefix)
+		filename := lang + ".json"
 		data, err := s.localesFS.ReadFile(filename)
 		if err != nil {
 			continue // Skip missing translations
@@ -121,30 +123,48 @@ func (s *I18nService) LoadTranslations() error {
 	return nil
 }
 
-// GetLanguage determines the best language for a request
-// Priority: user preference → Accept-Language → default
+// GetLanguage determines the best language for a request.
+// Priority per AI.md PART 31: ?lang= query param → lang cookie → Accept-Language header → default "en"
 func (s *I18nService) GetLanguage(r *http.Request) string {
 	if !s.config.Enabled {
 		return s.config.DefaultLanguage
 	}
 
-	// Check cookie for user preference
+	// 1. ?lang= query parameter (highest priority — also sets cookie via SetLangCookie)
+	if lang := r.URL.Query().Get("lang"); lang != "" && s.IsAvailable(lang) {
+		return lang
+	}
+
+	// 2. lang cookie
 	if cookie, err := r.Cookie(s.config.CookieName); err == nil {
 		if s.IsAvailable(cookie.Value) {
 			return cookie.Value
 		}
 	}
 
-	// Parse Accept-Language header
+	// 3. Accept-Language header
 	acceptLang := r.Header.Get("Accept-Language")
 	if acceptLang != "" {
-		lang := s.parseAcceptLanguage(acceptLang)
-		if lang != "" {
+		if lang := s.parseAcceptLanguage(acceptLang); lang != "" {
 			return lang
 		}
 	}
 
+	// 4. Default
 	return s.config.DefaultLanguage
+}
+
+// SetLangCookie writes a long-lived language preference cookie to the response.
+// Call this when a ?lang= query param is present to persist the choice.
+func (s *I18nService) SetLangCookie(w http.ResponseWriter, lang string) {
+	http.SetCookie(w, &http.Cookie{
+		Name:     s.config.CookieName,
+		Value:    lang,
+		Path:     "/",
+		MaxAge:   s.config.CookieMaxAge,
+		HttpOnly: false, // JS needs to read it for client-side rendering
+		SameSite: http.SameSiteLaxMode,
+	})
 }
 
 // parseAcceptLanguage parses Accept-Language header and returns best match

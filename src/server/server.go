@@ -5,6 +5,7 @@ package server
 import (
 	"context"
 	"fmt"
+	"io/fs"
 	"net/http"
 	"time"
 
@@ -12,6 +13,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/rs/cors"
 
+	"github.com/casapps/casrad/locales"
 	"github.com/casapps/casrad/src/config"
 	"github.com/casapps/casrad/src/server/handler"
 	appmiddleware "github.com/casapps/casrad/src/server/middleware"
@@ -29,6 +31,7 @@ type Server struct {
 	apiHandler  *handler.APIHandler
 	security    *appmiddleware.SecurityMiddleware
 	authService *service.AuthService
+	i18n        *service.I18nService
 
 	// setupToken is generated on first run, printed to console once, then consumed
 	setupToken string
@@ -38,12 +41,20 @@ type Server struct {
 func New(cfg *config.Config) (*Server, error) {
 	st := store.NewMemoryStore()
 
+	// Build i18n service with all 7 required languages per AI.md PART 31
+	i18nCfg := service.DefaultI18nConfig()
+	i18nSvc := service.NewI18nService(i18nCfg, locales.FS)
+	if err := i18nSvc.LoadTranslations(); err != nil {
+		return nil, fmt.Errorf("failed to load translations: %w", err)
+	}
+
 	s := &Server{
 		config:      cfg,
 		store:       st,
 		apiHandler:  handler.NewAPIHandler(st),
 		security:    appmiddleware.NewSecurityMiddleware(),
 		authService: service.NewAuthService(st),
+		i18n:        i18nSvc,
 	}
 
 	s.router = s.setupRoutes()
@@ -120,6 +131,16 @@ func (s *Server) setupRoutes() *chi.Mux {
 	r.Use(s.security.Headers)
 	// CSRF protection on all state-changing form routes — AI.md PART 11
 	r.Use(s.security.CSRF)
+	// Language cookie middleware — persist ?lang= preference per AI.md PART 31
+	r.Use(s.langMiddleware)
+
+	// Static assets — embedded via go:embed per AI.md PART 7
+	// Served with 1-year cache headers for immutable assets
+	staticRoot, err := fs.Sub(staticFS, "static")
+	if err != nil {
+		panic("static embed sub-FS failed: " + err.Error())
+	}
+	r.Handle("/static/*", http.StripPrefix("/static", http.FileServer(http.FS(staticRoot))))
 
 	// Well-known files — AI.md PART 11
 	r.Get("/robots.txt", s.handleRobotsTxt)
@@ -705,4 +726,16 @@ func (s *Server) handleAdminSetup(w http.ResponseWriter, r *http.Request) {
 
 	ap := s.adminPath()
 	http.Redirect(w, r, "/server/"+ap+"/", http.StatusSeeOther)
+}
+
+// langMiddleware persists a ?lang= query parameter as a cookie per AI.md PART 31.
+// When ?lang= is present and valid, the cookie is set so subsequent requests
+// without the query param still use the preferred language.
+func (s *Server) langMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if lang := r.URL.Query().Get("lang"); lang != "" && s.i18n.IsAvailable(lang) {
+			s.i18n.SetLangCookie(w, lang)
+		}
+		next.ServeHTTP(w, r)
+	})
 }
