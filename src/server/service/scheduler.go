@@ -27,8 +27,10 @@ const (
 type TaskType string
 
 const (
-	TaskTypeGlobal TaskType = "global" // Run on ONE node only
-	TaskTypeLocal  TaskType = "local"  // Run on EVERY node
+	// Run on ONE node only
+	TaskTypeGlobal TaskType = "global"
+	// Run on EVERY node
+	TaskTypeLocal TaskType = "local"
 )
 
 // TaskFunc is a function that executes a scheduled task
@@ -38,11 +40,14 @@ type TaskFunc func(ctx context.Context) error
 type Task struct {
 	ID       string
 	Name     string
-	Schedule string // Cron format or @shorthand
+	// Cron format or @shorthand
+	Schedule string
 	Handler  TaskFunc
 	Enabled  bool
-	Type     TaskType // global or local
-	Critical bool     // Cannot be disabled if true
+	// global or local
+	Type TaskType
+	// Cannot be disabled if true
+	Critical bool
 
 	// Execution tracking
 	Status       TaskStatus
@@ -57,7 +62,8 @@ type Task struct {
 	MaxRetries  int
 	RetryDelay  time.Duration
 	RetryCount  int
-	RetryBackoff bool // Use exponential backoff
+	// Use exponential backoff
+	RetryBackoff bool
 }
 
 // Scheduler is an alias for SchedulerService for backwards compatibility
@@ -72,7 +78,8 @@ type SchedulerService struct {
 	mu             sync.RWMutex
 	wg             sync.WaitGroup
 	timezone       *time.Location
-	catchUpWindow  time.Duration // Run missed tasks if within this window
+	// Run missed tasks if within this window
+	catchUpWindow time.Duration
 }
 
 // BuiltInTask defines a built-in scheduled task per PART 19
@@ -138,7 +145,8 @@ func NewSchedulerService() *SchedulerService {
 	s := &SchedulerService{
 		tasks:         make(map[string]*Task),
 		timezone:      time.Local,
-		catchUpWindow: time.Hour, // 1 hour catch-up window
+		// 1 hour catch-up window
+		catchUpWindow: time.Hour,
 	}
 
 	// Register all built-in tasks per PART 19
@@ -353,7 +361,8 @@ func (s *SchedulerService) executeTask(ctx context.Context, task *Task) error {
 	} else {
 		task.LastError = nil
 		task.Status = TaskStatusSuccess
-		task.RetryCount = 0 // Reset retry count on success
+		// Reset retry count on success
+		task.RetryCount = 0
 	}
 
 	return err
@@ -408,7 +417,8 @@ func (s *SchedulerService) calculateNextRun(task *Task, from time.Time) {
 	next := from.Truncate(time.Minute).Add(time.Minute)
 
 	// Find next matching time (look up to 1 year ahead)
-	maxIterations := 525600 // minutes in a year
+	// minutes in a year
+	maxIterations := 525600
 	for i := 0; i < maxIterations; i++ {
 		if schedule.matches(next) {
 			task.NextRun = next
@@ -420,11 +430,16 @@ func (s *SchedulerService) calculateNextRun(task *Task, from time.Time) {
 
 // cronSchedule represents a parsed cron schedule
 type cronSchedule struct {
-	minutes  []int // 0-59
-	hours    []int // 0-23
-	days     []int // 1-31
-	months   []int // 1-12
-	weekdays []int // 0-6 (0 = Sunday)
+	// 0-59
+	minutes []int
+	// 0-23
+	hours []int
+	// 1-31
+	days []int
+	// 1-12
+	months []int
+	// 0-6 (0 = Sunday)
+	weekdays []int
 }
 
 // matches returns true if the given time matches the schedule

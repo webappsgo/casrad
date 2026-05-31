@@ -13,7 +13,8 @@ import (
 // Task represents a scheduled task
 type Task struct {
 	Name     string
-	Schedule string // Cron expression or @every / @hourly shorthand
+	// Cron expression or @every / @hourly shorthand
+	Schedule string
 	Handler  func() error
 	Enabled  bool
 	LastRun  time.Time

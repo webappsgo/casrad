@@ -416,7 +416,8 @@ func (h *APIHandler) PlaylistCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create playlist in store
-	playlistID := int64(1) // Mock ID
+	// Mock ID
+	playlistID := int64(1)
 
 	SendCreated(w, map[string]interface{}{
 		"id":   playlistID,
@@ -595,7 +596,8 @@ func (h *APIHandler) PodcastSubscribe(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Validate and subscribe to podcast
-	podcastID := int64(1) // Mock ID
+	// Mock ID
+	podcastID := int64(1)
 
 	SendCreated(w, map[string]interface{}{
 		"id":       podcastID,
@@ -720,7 +722,8 @@ func (h *APIHandler) QueueAdd(w http.ResponseWriter, r *http.Request) {
 
 	var req struct {
 		TrackIDs []int64 `json:"track_ids"`
-		Position string  `json:"position"` // "next" or "end" (default)
+		// "next" or "end" (default)
+		Position string `json:"position"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -809,7 +812,8 @@ func (h *APIHandler) PlayerControl(w http.ResponseWriter, r *http.Request) {
 
 // CoverArt handles GET /api/v1/cover/{type}/{id} - Get cover art
 func (h *APIHandler) CoverArt(w http.ResponseWriter, r *http.Request) {
-	artType := r.PathValue("type") // album, artist, playlist
+	// album, artist, playlist
+	artType := r.PathValue("type")
 	idStr := r.PathValue("id")
 
 	_, err := strconv.ParseInt(idStr, 10, 64)
@@ -915,9 +919,11 @@ func (h *APIHandler) Rate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var req struct {
-		Type   string `json:"type"` // track, album, artist
-		ID     int64  `json:"id"`
-		Rating int    `json:"rating"` // 0-5
+		// track, album, artist
+		Type string `json:"type"`
+		ID   int64  `json:"id"`
+		// 0-5
+		Rating int `json:"rating"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -944,7 +950,8 @@ func (h *APIHandler) Favorite(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var req struct {
-		Type string `json:"type"` // track, album, artist
+		// track, album, artist
+		Type string `json:"type"`
 		ID   int64  `json:"id"`
 	}
 

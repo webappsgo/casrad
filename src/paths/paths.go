@@ -11,15 +11,24 @@ import (
 // Directories holds all platform-specific directory paths
 // See AI.md PART 4 for complete path specification per platform
 type Directories struct {
-	Config   string // Configuration files (server.yml)
-	Data     string // Application data
-	Cache    string // Cache files
-	Log      string // Log files
-	Backup   string // Backup storage
-	SSL      string // SSL certificates (letsencrypt/, local/)
-	Security string // Security databases (geoip/, blocklists/, cve/, trivy/)
-	Database string // SQLite database files
-	PIDFile  string // PID file path
+	// Configuration files (server.yml)
+	Config string
+	// Application data
+	Data string
+	// Cache files
+	Cache string
+	// Log files
+	Log string
+	// Backup storage
+	Backup string
+	// SSL certificates (letsencrypt/, local/)
+	SSL string
+	// Security databases (geoip/, blocklists/, cve/, trivy/)
+	Security string
+	// SQLite database files
+	Database string
+	// PID file path
+	PIDFile string
 }
 
 // IsPrivileged returns true if running as root/administrator
@@ -68,7 +77,8 @@ func getPrivileged() Directories {
 			SSL:      filepath.Join(base, "ssl"),
 			Security: filepath.Join(base, "security"),
 			Database: filepath.Join(base, "db"),
-			PIDFile:  "", // Windows uses Service Manager, no PID file
+			// Windows uses Service Manager, no PID file
+			PIDFile: "",
 		}
 
 	case "freebsd", "openbsd", "netbsd":
@@ -84,7 +94,8 @@ func getPrivileged() Directories {
 			PIDFile:  "/var/run/casapps/casrad.pid",
 		}
 
-	default: // Linux
+	// Linux
+	default:
 		return Directories{
 			Config:   "/etc/casapps/casrad",
 			Data:     "/var/lib/casapps/casrad",
@@ -138,7 +149,8 @@ func getUnprivileged() Directories {
 			SSL:      filepath.Join(configBase, "ssl"),
 			Security: filepath.Join(configBase, "security"),
 			Database: filepath.Join(dataBase, "db"),
-			PIDFile:  "", // No PID file for user-mode Windows
+			// No PID file for user-mode Windows
+			PIDFile: "",
 		}
 
 	case "freebsd", "openbsd", "netbsd":
@@ -169,7 +181,8 @@ func getUnprivileged() Directories {
 			PIDFile:  filepath.Join(dataBase, "casrad.pid"),
 		}
 
-	default: // Linux (XDG Base Directory Specification)
+	// Linux (XDG Base Directory Specification)
+	default:
 		configHome := os.Getenv("XDG_CONFIG_HOME")
 		if configHome == "" {
 			configHome = filepath.Join(home, ".config")

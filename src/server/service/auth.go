@@ -21,7 +21,8 @@ import (
 // Argon2id parameters per AI.md (OWASP 2023)
 const (
 	argonTime    = 3
-	argonMemory  = 64 * 1024 // 64MB
+	// 64MB
+	argonMemory = 64 * 1024
 	argonThreads = 4
 	argonKeyLen  = 32
 	argonSaltLen = 16
@@ -212,7 +213,8 @@ func (s *AuthService) CreateSession(ctx context.Context, userID, adminID int64, 
 		AdminID:      adminID,
 		IPAddress:    ip,
 		UserAgent:    userAgent,
-		ThemeName:    "dark", // Default theme
+		// Default theme
+		ThemeName:    "dark",
 		CreatedAt:    time.Now(),
 		ExpiresAt:    time.Now().Add(defaultSessionDuration),
 		LastActivity: time.Now(),
@@ -467,7 +469,8 @@ func (s *AuthService) RegisterUser(ctx context.Context, username, email, passwor
 		PasswordHash:      passwordHash,
 		Role:              "user",
 		ThemePreference:   "dark",
-		StorageQuotaBytes: 53687091200, // 50GB default
+		// 50GB default
+		StorageQuotaBytes: 53687091200,
 		IsActive:          true,
 		CreatedAt:         time.Now(),
 		UpdatedAt:         time.Now(),
@@ -528,8 +531,8 @@ func (s *AuthService) ChangePassword(ctx context.Context, userID int64, currentP
 	}
 
 	// Invalidate all sessions for security
+	// Log but don't fail
 	if err := s.store.DeleteUserSessions(ctx, userID); err != nil {
-		// Log but don't fail
 		fmt.Printf("WARN: Failed to invalidate sessions after password change: %v\n", err)
 	}
 

@@ -7,10 +7,14 @@ import "time"
 // Track represents an audio track in the library
 type Track struct {
 	ID           int64     `json:"id"`
-	FilePath     string    `json:"-"`           // Internal path, not exposed
-	FileHash     string    `json:"-"`           // SHA256 for deduplication
-	UserID       int64     `json:"user_id"`     // NULL/0 for global tracks
-	IsGlobal     bool      `json:"is_global"`   // From global directories
+	// Internal path, not exposed
+	FilePath string `json:"-"`
+	// SHA256 for deduplication
+	FileHash string `json:"-"`
+	// NULL/0 for global tracks
+	UserID int64 `json:"user_id"`
+	// From global directories
+	IsGlobal bool `json:"is_global"`
 
 	// Basic metadata
 	Title       string `json:"title"`
@@ -32,9 +36,12 @@ type Track struct {
 	DiscTotal   int `json:"disc_total"`
 
 	// Technical metadata
-	DurationMS    int64  `json:"duration_ms"` // Milliseconds
-	Bitrate       int    `json:"bitrate"`     // kbps
-	SampleRate    int    `json:"sample_rate"` // Hz
+	// Milliseconds
+	DurationMS int64 `json:"duration_ms"`
+	// kbps
+	Bitrate int `json:"bitrate"`
+	// Hz
+	SampleRate int `json:"sample_rate"`
 	Channels      int    `json:"channels"`
 	BitsPerSample int    `json:"bits_per_sample,omitempty"`
 	Codec         string `json:"codec"`
@@ -45,7 +52,8 @@ type Track struct {
 	MBID                 string `json:"mbid,omitempty"`
 	AlbumMBID            string `json:"album_mbid,omitempty"`
 	ArtistMBID           string `json:"artist_mbid,omitempty"`
-	AcoustIDFingerprint  string `json:"-"` // Long string, not serialized
+	// Long string, not serialized
+	AcoustIDFingerprint string `json:"-"`
 
 	// Additional metadata
 	ISRC          string `json:"isrc,omitempty"`
@@ -55,7 +63,8 @@ type Track struct {
 	Comment       string `json:"comment,omitempty"`
 
 	// User metadata
-	Rating     int      `json:"rating"` // 0-5
+	// 0-5
+	Rating int `json:"rating"`
 	Tags       []string `json:"tags,omitempty"`
 
 	// Statistics

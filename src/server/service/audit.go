@@ -56,16 +56,22 @@ type AuditEntry struct {
 
 // AuditActor represents who performed the action
 type AuditActor struct {
-	Type      string `json:"type"`                 // admin, user, system
-	ID        string `json:"id"`                   // username or user_id
-	IP        string `json:"ip,omitempty"`         // IP address
-	UserAgent string `json:"user_agent,omitempty"` // User agent string
+	// admin, user, system
+	Type string `json:"type"`
+	// username or user_id
+	ID string `json:"id"`
+	// IP address
+	IP string `json:"ip,omitempty"`
+	// User agent string
+	UserAgent string `json:"user_agent,omitempty"`
 }
 
 // AuditTarget represents what was acted upon
 type AuditTarget struct {
-	Type string `json:"type"` // session, user, config, etc.
-	ID   string `json:"id"`   // target identifier
+	// session, user, config, etc.
+	Type string `json:"type"`
+	// target identifier
+	ID string `json:"id"`
 }
 
 // AuditLogger handles audit log writing per AI.md PART 11
@@ -95,7 +101,8 @@ func NewAuditLogger() (*AuditLogger, error) {
 	return &AuditLogger{
 		file:    file,
 		enabled: true,
-		nodeid:  "node-1", // Single node by default
+		// Single node by default
+		nodeid: "node-1",
 	}, nil
 }
 
@@ -294,7 +301,8 @@ func (l *AuditLogger) LogTokenCreated(tokenPrefix, createdBy, scope string) {
 		},
 		Target: &AuditTarget{
 			Type: "token",
-			ID:   tokenPrefix + "...", // Only show prefix per PART 11
+			// Only show prefix per PART 11
+			ID: tokenPrefix + "...",
 		},
 		Details: map[string]string{"scope": scope},
 		Result:  ResultSuccess,

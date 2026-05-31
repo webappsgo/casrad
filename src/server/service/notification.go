@@ -22,7 +22,8 @@ const (
 func (t NotificationType) Icon() string {
 	switch t {
 	case NotifySuccess:
-		return "check-circle" // Tabler icon name
+		// Tabler icon name
+		return "check-circle"
 	case NotifyInfo:
 		return "info-circle"
 	case NotifyWarning:
@@ -44,7 +45,8 @@ func (t NotificationType) AutoDismiss() time.Duration {
 	case NotifyWarning:
 		return 10 * time.Second
 	case NotifyError, NotifySecurity:
-		return 0 // Manual dismiss required
+		// Manual dismiss required
+		return 0
 	default:
 		return 5 * time.Second
 	}
@@ -65,16 +67,22 @@ type Notification struct {
 type NotificationService struct {
 	// In-memory storage for active sessions
 	// Persistent storage is handled by the database
-	toasts    map[string][]*Notification // userID -> pending toasts
-	banners   map[string][]*Notification // userID -> active banners
+	// userID -> pending toasts
+	toasts map[string][]*Notification
+	// userID -> active banners
+	banners map[string][]*Notification
 	toastsMu  sync.RWMutex
 	bannersMu sync.RWMutex
 
 	// Configuration
-	Position        string        // top-right, top-left, bottom-right, bottom-left
-	DefaultDuration time.Duration // default auto-dismiss time
-	MaxNotifications int          // max notifications per user
-	RetentionDays    int          // days to keep in notification center
+	// top-right, top-left, bottom-right, bottom-left
+	Position string
+	// default auto-dismiss time
+	DefaultDuration time.Duration
+	// max notifications per user
+	MaxNotifications int
+	// days to keep in notification center
+	RetentionDays int
 }
 
 // NewNotificationService creates a new notification service

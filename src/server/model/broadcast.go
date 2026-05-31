@@ -7,14 +7,16 @@ import "time"
 type Broadcast struct {
 	ID               int64
 	MountPoint       string
-	Type             string // live, autodj, relay, user
+	// live, autodj, relay, user
+	Type             string
 	Name             string
 	Description      string
 	Genre            string
 	UserID           int64
 	StreamKey        string
 	Bitrate          int
-	Format           string // mp3, aac, opus, ogg, flac
+	// mp3, aac, opus, ogg, flac
+	Format           string
 	Channels         int
 	SampleRate       int
 	IsPublic         bool

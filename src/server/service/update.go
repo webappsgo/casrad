@@ -27,9 +27,12 @@ var (
 type UpdateBranch string
 
 const (
-	BranchStable UpdateBranch = "stable" // Release: v*, *.*.*
-	BranchBeta   UpdateBranch = "beta"   // Pre-release: *-beta
-	BranchDaily  UpdateBranch = "daily"  // Pre-release: YYYYMMDDHHMMSS
+	// Release: v*, *.*.*
+	BranchStable UpdateBranch = "stable"
+	// Pre-release: *-beta
+	BranchBeta UpdateBranch = "beta"
+	// Pre-release: YYYYMMDDHHMMSS
+	BranchDaily UpdateBranch = "daily"
 )
 
 // UpdateStatus represents the status of an update check
@@ -380,7 +383,8 @@ func (s *UpdateService) PerformUpdate(info *UpdateInfo) error {
 	info.Status = UpdateStatusInstalling
 
 	oldPath := s.binaryPath + ".old"
-	os.Remove(oldPath) // Remove any existing .old file
+	// Remove any existing .old file
+	os.Remove(oldPath)
 
 	if err := os.Rename(s.binaryPath, oldPath); err != nil {
 		os.Remove(tempPath)

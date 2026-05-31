@@ -23,7 +23,8 @@ var (
 
 // TOTPService handles TOTP operations
 type TOTPService struct {
-	issuer string // App name shown in authenticator
+	// App name shown in authenticator
+	issuer string
 }
 
 // NewTOTPService creates a new TOTP service

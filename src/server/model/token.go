@@ -10,9 +10,11 @@ import (
 type APIToken struct {
 	ID          int64
 	UserID      int64
-	Token       string // Only shown once on creation
+	// Only shown once on creation
+	Token       string
 	Name        string
-	Permissions string // JSON array stored in database
+	// JSON array stored in database
+	Permissions string
 	LastUsed    time.Time
 	LastIP      string
 	UseCount    int64

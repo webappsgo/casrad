@@ -20,7 +20,8 @@ type MemoryStore struct {
 	users     map[int64]*model.User
 	sessions  map[string]*model.Session
 	tokens    map[int64]*model.APIToken
-	tokenByID map[string]int64 // token string -> id
+	// token string -> id
+	tokenByID map[string]int64
 
 	// ID counters
 	nextAdminID int64
@@ -203,7 +204,8 @@ func (s *MemoryStore) CreateUser(ctx context.Context, user *model.User) (int64, 
 		newUser.ThemePreference = "dark"
 	}
 	if newUser.StorageQuotaBytes == 0 {
-		newUser.StorageQuotaBytes = 53687091200 // 50GB default
+		// 50GB default
+		newUser.StorageQuotaBytes = 53687091200
 	}
 
 	s.users[id] = newUser

@@ -27,8 +27,10 @@ const (
 
 // TorConfig holds Tor configuration
 type TorConfig struct {
-	Binary  string `yaml:"binary" json:"binary"`   // Path to Tor binary (auto-detected if empty)
-	DataDir string `yaml:"data_dir" json:"data_dir"` // Data directory for Tor
+	// Path to Tor binary (auto-detected if empty)
+	Binary string `yaml:"binary" json:"binary"`
+	// Data directory for Tor
+	DataDir string `yaml:"data_dir" json:"data_dir"`
 }
 
 // TorInfo represents Tor status information
@@ -342,7 +344,8 @@ func (tm *TorManager) generateVanity(ctx context.Context, prefix string) {
 	case <-ctx.Done():
 		log.Println("INFO: Vanity generation cancelled")
 		return
-	case <-time.After(time.Hour): // Timeout
+	// Timeout
+	case <-time.After(time.Hour):
 		log.Println("WARN: Vanity generation timed out")
 		return
 	}

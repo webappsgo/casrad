@@ -14,7 +14,8 @@ type Playlist struct {
 	IsPublic        bool      `json:"is_public"`
 	IsCollaborative bool      `json:"is_collaborative"`
 	IsSmart         bool      `json:"is_smart"`
-	SmartCriteria   string    `json:"-"` // JSON for smart playlist rules
+	// JSON for smart playlist rules
+	SmartCriteria   string    `json:"-"`
 	SortOrder       string    `json:"sort_order"`
 	PlayCount       int64     `json:"play_count"`
 	FollowerCount   int64     `json:"follower_count"`

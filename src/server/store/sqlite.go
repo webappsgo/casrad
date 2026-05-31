@@ -859,7 +859,8 @@ func (s *SQLiteStore) CreateUser(ctx context.Context, user *model.User) (int64, 
 		user.ThemePreference = "dark"
 	}
 	if user.StorageQuotaBytes == 0 {
-		user.StorageQuotaBytes = 53687091200 // 50GB default
+		// 50GB default
+		user.StorageQuotaBytes = 53687091200
 	}
 
 	result, err := s.db.ExecContext(ctx, query,

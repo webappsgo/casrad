@@ -27,7 +27,8 @@ const (
 	MethodSu       EscalationMethod = "su"       // su command
 	MethodPkexec   EscalationMethod = "pkexec"   // PolicyKit
 	MethodDoas     EscalationMethod = "doas"     // OpenBSD doas
-	MethodOsascript EscalationMethod = "osascript" // macOS GUI prompt
+	// macOS GUI prompt
+	MethodOsascript EscalationMethod = "osascript"
 	MethodUAC      EscalationMethod = "uac"      // Windows UAC
 	MethodRunas    EscalationMethod = "runas"    // Windows runas
 	MethodNone     EscalationMethod = "none"     // No method available

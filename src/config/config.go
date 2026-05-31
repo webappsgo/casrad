@@ -23,7 +23,8 @@ type ServerConfig struct {
 	Address         string `yaml:"address"`
 	Port            int    `yaml:"port"`
 	AdminPath       string `yaml:"admin_path"`
-	SecurityContact string `yaml:"security_contact"` // For security.txt per PART 11
+	// For security.txt per PART 11
+	SecurityContact string `yaml:"security_contact"`
 	Debug           bool   `yaml:"debug"`
 
 	// Request limits per PART 12
@@ -41,28 +42,41 @@ type ServerConfig struct {
 
 // LimitsConfig holds request limit settings per AI.md PART 12
 type LimitsConfig struct {
-	MaxBodySize  int64 `yaml:"max_body_size"`  // bytes, default 10MB
-	ReadTimeout  int   `yaml:"read_timeout"`   // seconds, default 30
-	WriteTimeout int   `yaml:"write_timeout"`  // seconds, default 30
-	IdleTimeout  int   `yaml:"idle_timeout"`   // seconds, default 120
+	// bytes, default 10MB
+	MaxBodySize int64 `yaml:"max_body_size"`
+	// seconds, default 30
+	ReadTimeout int `yaml:"read_timeout"`
+	// seconds, default 30
+	WriteTimeout int `yaml:"write_timeout"`
+	// seconds, default 120
+	IdleTimeout int `yaml:"idle_timeout"`
 }
 
 // SessionConfig holds session settings per AI.md PART 12
 type SessionConfig struct {
-	AdminMaxAge     int    `yaml:"admin_max_age"`     // seconds, default 30 days (2592000)
-	AdminIdleTimeout int   `yaml:"admin_idle_timeout"` // seconds, default 24 hours (86400)
-	UserMaxAge      int    `yaml:"user_max_age"`      // seconds, default 7 days (604800)
-	UserIdleTimeout int    `yaml:"user_idle_timeout"` // seconds, default 24 hours (86400)
-	CookieName      string `yaml:"cookie_name"`       // default "session"
-	Secure          string `yaml:"secure"`            // auto, true, false
-	SameSite        string `yaml:"same_site"`         // strict, lax, none
+	// seconds, default 30 days (2592000)
+	AdminMaxAge int `yaml:"admin_max_age"`
+	// seconds, default 24 hours (86400)
+	AdminIdleTimeout int `yaml:"admin_idle_timeout"`
+	// seconds, default 7 days (604800)
+	UserMaxAge int `yaml:"user_max_age"`
+	// seconds, default 24 hours (86400)
+	UserIdleTimeout int `yaml:"user_idle_timeout"`
+	// default "session"
+	CookieName string `yaml:"cookie_name"`
+	// auto, true, false
+	Secure string `yaml:"secure"`
+	// strict, lax, none
+	SameSite string `yaml:"same_site"`
 }
 
 // RateLimitConfig holds rate limiting settings per AI.md PART 12
 type RateLimitConfig struct {
 	Enabled  bool `yaml:"enabled"`
-	Requests int  `yaml:"requests"` // per window, default 120
-	Window   int  `yaml:"window"`   // seconds, default 60
+	// per window, default 120
+	Requests int `yaml:"requests"`
+	// seconds, default 60
+	Window int `yaml:"window"`
 }
 
 // DatabaseConfig holds database settings
@@ -80,7 +94,8 @@ type CacheConfig struct {
 // UsersConfig holds multi-user settings
 type UsersConfig struct {
 	Enabled      bool   `yaml:"enabled"`
-	Registration string `yaml:"registration"` // disabled, public, private, approval
+	// disabled, public, private, approval
+	Registration string `yaml:"registration"`
 }
 
 // AudioConfig holds audio streaming settings
@@ -95,23 +110,32 @@ func Load() (*Config, error) {
 	cfg := &Config{
 		Server: ServerConfig{
 			Address:         "0.0.0.0",
-			Port:            0, // Auto-select from 64000-64999
+			// Auto-select from 64000-64999
+			Port: 0,
 			AdminPath:       "admin",
 			Debug:           false,
 			DefaultLanguage: "en",
 			// Request limits per PART 12
 			Limits: LimitsConfig{
-				MaxBodySize:  10 * 1024 * 1024, // 10MB
-				ReadTimeout:  30,               // 30s
-				WriteTimeout: 30,               // 30s
-				IdleTimeout:  120,              // 120s
+				// 10MB
+				MaxBodySize: 10 * 1024 * 1024,
+				// 30s
+				ReadTimeout: 30,
+				// 30s
+				WriteTimeout: 30,
+				// 120s
+				IdleTimeout: 120,
 			},
 			// Session config per PART 12
 			Session: SessionConfig{
-				AdminMaxAge:      2592000, // 30 days
-				AdminIdleTimeout: 86400,   // 24 hours
-				UserMaxAge:       604800,  // 7 days
-				UserIdleTimeout:  86400,   // 24 hours
+				// 30 days
+				AdminMaxAge: 2592000,
+				// 24 hours
+				AdminIdleTimeout: 86400,
+				// 7 days
+				UserMaxAge: 604800,
+				// 24 hours
+				UserIdleTimeout: 86400,
 				CookieName:       "session",
 				Secure:           "auto",
 				SameSite:         "lax",

@@ -70,19 +70,27 @@ type BackupManifest struct {
 
 // RetentionConfig holds backup retention settings per PART 22
 type RetentionConfig struct {
-	MaxBackups  int `json:"max_backups"`  // Daily full backups to keep (default: 1)
-	KeepWeekly  int `json:"keep_weekly"`  // Weekly backups (Sunday) - 0 = disabled
-	KeepMonthly int `json:"keep_monthly"` // Monthly backups (1st) - 0 = disabled
-	KeepYearly  int `json:"keep_yearly"`  // Yearly backups (Jan 1st) - 0 = disabled
+	// Daily full backups to keep (default: 1)
+	MaxBackups int `json:"max_backups"`
+	// Weekly backups (Sunday) - 0 = disabled
+	KeepWeekly int `json:"keep_weekly"`
+	// Monthly backups (1st) - 0 = disabled
+	KeepMonthly int `json:"keep_monthly"`
+	// Yearly backups (Jan 1st) - 0 = disabled
+	KeepYearly int `json:"keep_yearly"`
 }
 
 // DefaultRetentionConfig returns the default retention configuration
 func DefaultRetentionConfig() *RetentionConfig {
 	return &RetentionConfig{
-		MaxBackups:  1, // Yesterday only
-		KeepWeekly:  0, // Disabled
-		KeepMonthly: 0, // Disabled
-		KeepYearly:  0, // Disabled
+		// Yesterday only
+		MaxBackups: 1,
+		// Disabled
+		KeepWeekly: 0,
+		// Disabled
+		KeepMonthly: 0,
+		// Disabled
+		KeepYearly: 0,
 	}
 }
 
@@ -118,7 +126,8 @@ type BackupInfo struct {
 	BackupType  BackupType   `json:"backup_type"`
 	Encrypted   bool         `json:"encrypted"`
 	Verified    bool         `json:"verified"`
-	RetentionTag string      `json:"retention_tag,omitempty"` // daily, weekly, monthly, yearly
+	// daily, weekly, monthly, yearly
+	RetentionTag string `json:"retention_tag,omitempty"`
 }
 
 // BackupService provides backup and restore functionality
@@ -426,7 +435,8 @@ func (s *BackupService) encryptArchive(data []byte, password string) ([]byte, er
 
 // decryptArchive decrypts data using AES-256-GCM with Argon2id key derivation
 func (s *BackupService) decryptArchive(data []byte, password string) ([]byte, error) {
-	if len(data) < 28 { // 16 (salt) + 12 (nonce) minimum
+	// 16 (salt) + 12 (nonce) minimum
+	if len(data) < 28 {
 		return nil, ErrBackupCorrupted
 	}
 

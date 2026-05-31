@@ -17,7 +17,8 @@ type Config struct {
 	Version   string
 	CommitID  string
 	BuildDate string
-	Mode      string // "production" or "development"
+	// "production" or "development"
+	Mode      string
 	Debug     bool
 	URLs      []string
 	ListenURL string

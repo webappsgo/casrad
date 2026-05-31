@@ -17,7 +17,8 @@ type I18nConfig struct {
 	FallbackLanguage   string   `yaml:"fallback_language" json:"fallback_language"`
 	AvailableLanguages []string `yaml:"available_languages" json:"available_languages"`
 	CookieName         string   `yaml:"cookie_name" json:"cookie_name"`
-	CookieMaxAge       int      `yaml:"cookie_max_age" json:"cookie_max_age"` // seconds
+	// seconds
+	CookieMaxAge int `yaml:"cookie_max_age" json:"cookie_max_age"`
 }
 
 // DefaultI18nConfig returns default i18n configuration
@@ -29,7 +30,8 @@ func DefaultI18nConfig() I18nConfig {
 		// All 7 required languages per AI.md PART 31
 		AvailableLanguages: []string{"en", "es", "zh", "fr", "ar", "de", "ja"},
 		CookieName:         "lang",
-		CookieMaxAge:       31536000, // 1 year
+		// 1 year
+		CookieMaxAge: 31536000,
 	}
 }
 
@@ -38,14 +40,16 @@ type LanguageMeta struct {
 	Language   string `json:"language"`
 	Name       string `json:"name"`
 	NativeName string `json:"native_name"`
-	Direction  string `json:"direction"` // ltr or rtl
+	// ltr or rtl
+	Direction string `json:"direction"`
 	Version    string `json:"version"`
 }
 
 // Translation holds a complete translation file
 type Translation struct {
 	Meta LanguageMeta           `json:"meta"`
-	Data map[string]interface{} `json:"data"` // Nested translation keys
+	// Nested translation keys
+	Data map[string]interface{} `json:"data"`
 }
 
 // I18nService provides internationalization services
@@ -58,10 +62,14 @@ type I18nService struct {
 
 // RTLLanguages lists languages that use right-to-left text
 var RTLLanguages = map[string]bool{
-	"ar": true, // Arabic
-	"he": true, // Hebrew
-	"fa": true, // Persian
-	"ur": true, // Urdu
+	// Arabic
+	"ar": true,
+	// Hebrew
+	"he": true,
+	// Persian
+	"fa": true,
+	// Urdu
+	"ur": true,
 }
 
 // NewI18nService creates a new i18n service
@@ -83,7 +91,8 @@ func (s *I18nService) LoadTranslations() error {
 		filename := lang + ".json"
 		data, err := s.localesFS.ReadFile(filename)
 		if err != nil {
-			continue // Skip missing translations
+			// Skip missing translations
+			continue
 		}
 
 		var rawData map[string]interface{}
@@ -162,7 +171,8 @@ func (s *I18nService) SetLangCookie(w http.ResponseWriter, lang string) {
 		Value:    lang,
 		Path:     "/",
 		MaxAge:   s.config.CookieMaxAge,
-		HttpOnly: false, // JS needs to read it for client-side rendering
+		// JS needs to read it for client-side rendering
+		HttpOnly: false,
 		SameSite: http.SameSiteLaxMode,
 	})
 }
@@ -283,8 +293,10 @@ func (s *I18nService) SetLanguageCookie(w http.ResponseWriter, lang string) {
 
 // TemplateData returns i18n data for template rendering
 type I18nTemplateData struct {
-	Lang      string // Current language code
-	Dir       string // Text direction (ltr/rtl)
+	// Current language code
+	Lang string
+	// Text direction (ltr/rtl)
+	Dir       string
 	Languages []LanguageMeta
 }
 

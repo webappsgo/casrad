@@ -18,7 +18,8 @@ type TLSMode string
 
 const (
 	TLSModeAuto     TLSMode = "auto"     // Try STARTTLS, fallback to plain
-	TLSModeStartTLS TLSMode = "starttls" // Require STARTTLS
+	// Require STARTTLS
+	TLSModeStartTLS TLSMode = "starttls"
 	TLSModeTLS      TLSMode = "tls"      // Implicit TLS (port 465)
 	TLSModeNone     TLSMode = "none"     // No encryption
 )
@@ -27,7 +28,8 @@ const (
 var SMTPAutoDetectHosts = []string{
 	"localhost",
 	"127.0.0.1",
-	"172.17.0.1", // Docker host
+	// Docker host
+	"172.17.0.1",
 }
 
 // SMTPAutoDetectPorts are the ports to try for auto-detection

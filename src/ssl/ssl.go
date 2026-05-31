@@ -32,11 +32,16 @@ import (
 type CertificateSource string
 
 const (
-	SourceSystemLetsEncrypt CertificateSource = "system_letsencrypt" // /etc/letsencrypt (certbot managed)
-	SourceAppLetsEncrypt    CertificateSource = "app_letsencrypt"    // {config_dir}/ssl/letsencrypt (app managed)
-	SourceLocal             CertificateSource = "local"              // {config_dir}/ssl/local (user managed)
-	SourceSelfSigned        CertificateSource = "self_signed"        // Generated on startup
-	SourceNone              CertificateSource = "none"               // No certificate
+	// /etc/letsencrypt (certbot managed)
+	SourceSystemLetsEncrypt CertificateSource = "system_letsencrypt"
+	// {config_dir}/ssl/letsencrypt (app managed)
+	SourceAppLetsEncrypt CertificateSource = "app_letsencrypt"
+	// {config_dir}/ssl/local (user managed)
+	SourceLocal CertificateSource = "local"
+	// Generated on startup
+	SourceSelfSigned CertificateSource = "self_signed"
+	// No certificate
+	SourceNone CertificateSource = "none"
 )
 
 // Certificate represents a loaded certificate with metadata
@@ -62,7 +67,8 @@ type Manager struct {
 	autoSSL       bool
 	httpPort      int
 	httpsPort     int
-	staging       bool // Use Let's Encrypt staging
+	// Use Let's Encrypt staging
+	staging bool
 	challengeType string
 
 	// State
@@ -79,15 +85,24 @@ type Manager struct {
 
 // Config holds SSL manager configuration
 type Config struct {
-	Domain        string            // Primary domain
-	Email         string            // ACME account email
-	AutoSSL       bool              // Enable automatic certificate management
-	HTTPPort      int               // HTTP port for HTTP-01 challenge
-	HTTPSPort     int               // HTTPS port
-	Staging       bool              // Use Let's Encrypt staging environment
-	ChallengeType string            // http01, tlsalpn01, dns01
-	DNSProvider   string            // DNS provider for DNS-01
-	DNSCreds      map[string]string // DNS provider credentials
+	// Primary domain
+	Domain string
+	// ACME account email
+	Email string
+	// Enable automatic certificate management
+	AutoSSL bool
+	// HTTP port for HTTP-01 challenge
+	HTTPPort int
+	// HTTPS port
+	HTTPSPort int
+	// Use Let's Encrypt staging environment
+	Staging bool
+	// http01, tlsalpn01, dns01
+	ChallengeType string
+	// DNS provider for DNS-01
+	DNSProvider string
+	// DNS provider credentials
+	DNSCreds map[string]string
 }
 
 // NewManager creates a new SSL manager
@@ -572,7 +587,7 @@ func (m *Manager) cleanupDNSRecord(ctx context.Context, name string) error {
 // DNS provider implementations (simplified)
 func (m *Manager) setCloudflareRecord(ctx context.Context, name, value string) error {
 	// Cloudflare API implementation
-	// Uses m.dnsCredentials["api_token"] or m.dnsCredentials["api_key"] + m.dnsCredentials["email"]
+	// Uses m.dnsCredentials["api_token"] or m.dnsCredentials["api_key"] + m.dnsCredentials["email"].
 	log.Printf("Setting Cloudflare DNS record: %s = %s", name, value)
 	return nil
 }
@@ -584,7 +599,7 @@ func (m *Manager) deleteCloudflareRecord(ctx context.Context, name string) error
 
 func (m *Manager) setRoute53Record(ctx context.Context, name, value string) error {
 	// AWS Route53 implementation
-	// Uses m.dnsCredentials["access_key_id"], m.dnsCredentials["secret_access_key"], m.dnsCredentials["region"]
+	// Uses m.dnsCredentials["access_key_id"], m.dnsCredentials["secret_access_key"], m.dnsCredentials["region"].
 	log.Printf("Setting Route53 DNS record: %s = %s", name, value)
 	return nil
 }
@@ -596,7 +611,7 @@ func (m *Manager) deleteRoute53Record(ctx context.Context, name string) error {
 
 func (m *Manager) setDigitalOceanRecord(ctx context.Context, name, value string) error {
 	// DigitalOcean API implementation
-	// Uses m.dnsCredentials["auth_token"]
+	// Uses m.dnsCredentials["auth_token"].
 	log.Printf("Setting DigitalOcean DNS record: %s = %s", name, value)
 	return nil
 }

@@ -17,7 +17,8 @@ import (
 
 // Admin represents the admin module
 type Admin struct {
-	path        string // Configurable admin path, default "admin"
+	// Configurable admin path, default "admin"
+	path        string
 	store       store.Store
 	authService *service.AuthService
 	userService *service.UserService
@@ -195,11 +196,13 @@ func (a *Admin) handleDashboard(w http.ResponseWriter, r *http.Request) {
 	runtime.ReadMemStats(&memStats)
 
 	users, total, _ := a.store.ListUsers(ctx, 0, 1)
-	_ = users // suppress unused warning
+	// suppress unused warning
+	_ = users
 
 	stats := map[string]interface{}{
 		"total_users":     total,
-		"active_sessions": 0, // Would need session count from store
+		// Would need session count from store
+		"active_sessions": 0,
 		"uptime":          formatDuration(time.Since(a.startTime)),
 		"memory_used":     formatBytes(memStats.Alloc),
 	}

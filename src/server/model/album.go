@@ -13,7 +13,8 @@ type Album struct {
 	Year        int       `json:"year"`
 	Genre       string    `json:"genre"`
 	CoverArtURL string    `json:"cover_art_url,omitempty"`
-	CoverArtPath string   `json:"-"` // Internal path
+	// Internal path
+	CoverArtPath string   `json:"-"`
 	MBID        string    `json:"mbid,omitempty"`
 	TotalTracks int       `json:"total_tracks"`
 	TotalDiscs  int       `json:"total_discs"`

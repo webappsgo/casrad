@@ -17,7 +17,8 @@ type MetricsConfig struct {
 	Endpoint         string
 	IncludeSystem    bool
 	IncludeRuntime   bool
-	Token            string // Optional bearer token for authentication
+	// Optional bearer token for authentication
+	Token            string
 	DurationBuckets  []float64
 	SizeBuckets      []float64
 }

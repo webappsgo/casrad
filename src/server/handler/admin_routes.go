@@ -10,11 +10,16 @@ import (
 
 // ValidAdminRootPaths contains the only valid direct children of /{adminpath}/
 var ValidAdminRootPaths = map[string]bool{
-	"":              true, // Dashboard (/{adminpath}/)
-	"profile":       true, // Admin's own profile
-	"preferences":   true, // Admin's own preferences
-	"notifications": true, // Admin's own notifications
-	"server":        true, // Server management (has sub-routes)
+	// Dashboard (/{adminpath}/)
+	"":              true,
+	// Admin's own profile
+	"profile":       true,
+	// Admin's own preferences
+	"preferences":   true,
+	// Admin's own notifications
+	"notifications": true,
+	// Server management (has sub-routes)
+	"server":        true,
 }
 
 // ReservedAdminPaths that cannot be used as admin path
@@ -33,7 +38,8 @@ func ValidateAdminRoute(path string) error {
 	// Extract first segment after /{adminpath}/
 	path = strings.Trim(path, "/")
 	if path == "" {
-		return nil // Root path is OK
+		// Root path is OK
+		return nil
 	}
 
 	parts := strings.SplitN(path, "/", 2)

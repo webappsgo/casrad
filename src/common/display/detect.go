@@ -14,7 +14,8 @@ const (
 	ModeCLI     Mode = "cli"     // Command-line mode
 	ModeTUI     Mode = "tui"     // Terminal UI mode
 	ModeGUI     Mode = "gui"     // Graphical UI mode
-	ModeService Mode = "service" // Background service mode
+	// Background service mode
+	ModeService Mode = "service"
 )
 
 // Detect detects the current display mode

@@ -17,7 +17,8 @@ type AuthHandler struct {
 	userService     *service.UserService
 	emailService    *service.EmailService
 	securityMW      *middleware.SecurityMiddleware
-	registrationMode string // "disabled", "public", "private", "approval"
+	// "disabled", "public", "private", "approval"
+	registrationMode string
 }
 
 // NewAuthHandler creates a new auth handler

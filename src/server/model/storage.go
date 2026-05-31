@@ -6,7 +6,8 @@ import "time"
 // UserStorage represents per-user storage configuration
 type UserStorage struct {
 	UserID              int64
-	MusicPaths          string // JSON array of paths
+	// JSON array of paths
+	MusicPaths string
 	PodcastPath         string
 	AudiobookPath       string
 	RadioPath           string
@@ -29,7 +30,8 @@ type UserStorage struct {
 // GlobalDirectory represents a global media directory
 type GlobalDirectory struct {
 	ID                int64
-	Type              string // music, podcast, audiobook, playlist
+	// music, podcast, audiobook, playlist
+	Type string
 	Path              string
 	IsActive          bool
 	IsPublic          bool
@@ -49,8 +51,10 @@ type PlaybackHistory struct {
 	TrackID       int64
 	StartedAt     time.Time
 	EndedAt       time.Time
-	PlayDuration  int // seconds
-	TrackDuration int // seconds
+	// seconds
+	PlayDuration int
+	// seconds
+	TrackDuration int
 	Source        string
 	SourceIP      string
 	UserAgent     string

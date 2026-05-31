@@ -19,8 +19,10 @@ type Audiobook struct {
 	PublishedDate   time.Time
 	Language        string
 	Description     string
-	TotalDuration   int // seconds
-	CurrentPosition int // seconds
+	// seconds
+	TotalDuration int
+	// seconds
+	CurrentPosition int
 	CurrentChapter  int
 	PlayCount       int
 	Completed       bool
@@ -35,7 +37,9 @@ type AudiobookChapter struct {
 	AudiobookID   int64
 	ChapterNumber int
 	Title         string
-	StartTime     int // seconds
-	EndTime       int // seconds
+	// seconds
+	StartTime int
+	// seconds
+	EndTime int
 	FilePath      string
 }

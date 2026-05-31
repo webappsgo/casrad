@@ -33,16 +33,26 @@ const (
 
 // Config holds service configuration
 type Config struct {
-	Name        string // Service name (default: casrad)
-	DisplayName string // Display name
-	Description string // Service description
-	BinaryPath  string // Path to binary
-	User        string // User to run as
-	Group       string // Group to run as
-	WorkDir     string // Working directory
-	LogDir      string // Log directory
-	DataDir     string // Data directory
-	ConfigDir   string // Config directory
+	// Service name (default: casrad)
+	Name string
+	// Display name
+	DisplayName string
+	// Service description
+	Description string
+	// Path to binary
+	BinaryPath string
+	// User to run as
+	User string
+	// Group to run as
+	Group string
+	// Working directory
+	WorkDir string
+	// Log directory
+	LogDir string
+	// Data directory
+	DataDir string
+	// Config directory
+	ConfigDir string
 }
 
 // Manager handles service installation and management
@@ -249,7 +259,8 @@ func (m *Manager) Enable() error {
 	case RCD:
 		return m.enableRCD()
 	case Launchd:
-		return nil // RunAtLoad in plist handles this
+		// RunAtLoad in plist handles this
+		return nil
 	case Windows:
 		return exec.Command("sc", "config", m.config.Name, "start=", "auto").Run()
 	default:
@@ -367,7 +378,8 @@ func (m *Manager) createServiceUser() error {
 	case "freebsd":
 		return m.createFreeBSDUser()
 	case "windows":
-		return nil // Windows uses Virtual Service Account
+		// Windows uses Virtual Service Account
+		return nil
 	default:
 		return nil
 	}

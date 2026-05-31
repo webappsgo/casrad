@@ -38,10 +38,12 @@ type PodcastEpisode struct {
 	AudioURL      string
 	WebsiteURL    string
 	PublishedAt   time.Time
-	Duration      int // seconds
+	// seconds
+	Duration      int
 	FileSize      int64
 	FilePath      string
-	PlayPosition  int // seconds
+	// seconds
+	PlayPosition  int
 	IsPlayed      bool
 	PlayedAt      time.Time
 	IsDownloaded  bool

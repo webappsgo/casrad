@@ -10,7 +10,8 @@ type Admin struct {
 	Email               string
 	PasswordHash        string
 	TOTPSecret          string
-	Role                string // admin, super_admin
+	// admin, super_admin
+	Role                string
 	IsActive            bool
 	CreatedAt           time.Time
 	UpdatedAt           time.Time

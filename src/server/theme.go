@@ -10,9 +10,11 @@ import (
 type Theme string
 
 const (
-	ThemeDark  Theme = "dark"  // Default theme
+	// Default theme
+	ThemeDark  Theme = "dark"
 	ThemeLight Theme = "light"
-	ThemeAuto  Theme = "auto" // Follows system preference
+	// Follows system preference
+	ThemeAuto Theme = "auto"
 )
 
 // GetTheme returns the current theme for a request
@@ -36,8 +38,10 @@ func SetTheme(w http.ResponseWriter, theme Theme) {
 		Name:     "theme",
 		Value:    string(theme),
 		Path:     "/",
-		MaxAge:   365 * 24 * 60 * 60, // 1 year
-		HttpOnly: false,              // Allow JS access for instant switching
+		// 1 year
+		MaxAge: 365 * 24 * 60 * 60,
+		// Allow JS access for instant switching
+		HttpOnly: false,
 		SameSite: http.SameSiteLaxMode,
 	})
 }
