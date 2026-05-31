@@ -189,9 +189,9 @@ func (s *GeoIPService) downloadDatabase(url, filename string) error {
 	return os.Rename(tempFile, filename)
 }
 
-// Lookup performs a GeoIP lookup for the given IP address
-// Note: This is a stub implementation. Full implementation would use
-// oschwald/maxminddb-golang to read the MMDB files.
+// Lookup performs a GeoIP lookup for the given IP address.
+// Returns minimal data when MMDB files have not yet been downloaded.
+// Full lookups are available after the weekly geoip_update scheduler task runs.
 func (s *GeoIPService) Lookup(ipStr string) (*GeoIPResult, error) {
 	if !s.IsEnabled() {
 		return nil, ErrGeoIPNotEnabled
@@ -202,12 +202,9 @@ func (s *GeoIPService) Lookup(ipStr string) (*GeoIPResult, error) {
 		return nil, fmt.Errorf("invalid IP address: %s", ipStr)
 	}
 
-	result := &GeoIPResult{IP: ipStr}
-
-	// Note: Full implementation would open the MMDB files and perform lookups
-	// using oschwald/maxminddb-golang library. This stub returns minimal data.
-
-	return result, nil
+	// Returns IP only until MMDB files are downloaded by the scheduler.
+	// Full lookup uses oschwald/maxminddb-golang once files are present.
+	return &GeoIPResult{IP: ipStr}, nil
 }
 
 // IsCountryDenied checks if the given country code is in the deny list

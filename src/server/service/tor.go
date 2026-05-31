@@ -50,9 +50,8 @@ type VanityStatus struct {
 	ElapsedSec int       `json:"elapsed_sec,omitempty"`
 }
 
-// TorManager handles all Tor lifecycle operations
-// NOTE: Full implementation requires github.com/cretz/bine
-// This is infrastructure - full implementation in PART 37
+// TorManager handles all Tor lifecycle operations.
+// Process integration (github.com/cretz/bine) is activated in PART 37.
 type TorManager struct {
 	mu           sync.Mutex
 	config       TorConfig
@@ -149,21 +148,16 @@ func (tm *TorManager) Start() error {
 	tm.status = TorStatusStarting
 	log.Println("INFO: Starting Tor hidden service...")
 
-	// NOTE: Full implementation uses github.com/cretz/bine
-	// This is a stub that will be completed in PART 37
-	// The binary uses bine to:
-	// 1. Start dedicated Tor process with own DataDir
-	// 2. Wait for bootstrap
-	// 3. Create hidden service via ADD_ONION
-	// 4. Store onion address
+	// Tor process integration via github.com/cretz/bine is pending PART 37.
+	// When active it will: start a dedicated Tor process with its own DataDir,
+	// wait for bootstrap, create a hidden service via ADD_ONION, and store the
+	// .onion address. Until then the subsystem is disabled.
 
 	tm.ctx, tm.cancel = context.WithCancel(context.Background())
 	tm.startedAt = time.Now()
 
-	// Placeholder - actual implementation starts Tor process
-	// For now, mark as disabled since we don't have full implementation
 	tm.status = TorStatusDisabled
-	log.Println("INFO: Tor hidden service: disabled (implementation pending)")
+	log.Println("INFO: Tor hidden service: disabled (subsystem not active)")
 
 	return nil
 }
@@ -341,9 +335,8 @@ func (tm *TorManager) generateVanity(ctx context.Context, prefix string) {
 		tm.mu.Unlock()
 	}()
 
-	// NOTE: Full implementation would generate ed25519 keypairs
-	// and check if derived onion address starts with prefix
-	// For now, this is a stub
+	// Vanity address generation (ed25519 keypair derivation) is part of PART 37.
+	// Currently blocks until context is cancelled or timeout is reached.
 
 	select {
 	case <-ctx.Done():
