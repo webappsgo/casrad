@@ -23,6 +23,7 @@ var (
 	ErrEmailInvalidFormat        = errors.New("invalid email address")
 	ErrEmailTooLong              = errors.New("email cannot exceed 255 characters")
 	ErrInputTooLong              = errors.New("input is too long")
+	ErrInputTooShort             = errors.New("input is too short")
 	ErrInputEmpty                = errors.New("input cannot be empty")
 )
 
@@ -244,7 +245,7 @@ func ValidateStringWithMin(input string, minLen, maxLen int) (string, error) {
 
 	// Check minimum length
 	if len(input) < minLen {
-		return "", ErrInputTooLong // Reusing error - should be ErrInputTooShort
+		return "", ErrInputTooShort
 	}
 
 	// Check maximum length

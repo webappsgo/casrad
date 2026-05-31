@@ -5,8 +5,10 @@ import (
 	"context"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/casapps/casrad/src/server/service"
+	"github.com/casapps/casrad/src/server/store"
 )
 
 // Context keys for request context
@@ -22,11 +24,12 @@ const (
 // AuthMiddleware validates session or API token authentication
 type AuthMiddleware struct {
 	authService *service.AuthService
+	store       store.Store
 }
 
 // NewAuthMiddleware creates a new auth middleware
-func NewAuthMiddleware(auth *service.AuthService) *AuthMiddleware {
-	return &AuthMiddleware{authService: auth}
+func NewAuthMiddleware(auth *service.AuthService, st store.Store) *AuthMiddleware {
+	return &AuthMiddleware{authService: auth, store: st}
 }
 
 // RequireAuth requires authentication (session or API token)
@@ -48,16 +51,19 @@ func (m *AuthMiddleware) RequireAuth(next http.Handler) http.Handler {
 			}
 		}
 
-		// Try API token (Bearer token)
+		// Try API token (Bearer token) — validate against api_tokens table per AI.md PART 11
 		authHeader := r.Header.Get("Authorization")
 		if strings.HasPrefix(authHeader, "Bearer ") {
-			token := strings.TrimPrefix(authHeader, "Bearer ")
-			// API tokens are validated against the database
-			// For now, we just check if token is provided
-			// Full implementation would validate against api_tokens table
-			if token != "" {
-				// Token validation would happen here
-				// For now, return unauthorized
+			rawToken := strings.TrimPrefix(authHeader, "Bearer ")
+			if rawToken != "" && m.store != nil {
+				apiToken, err := m.store.GetToken(ctx, rawToken)
+				if err == nil && apiToken != nil && apiToken.IsActive &&
+					(apiToken.ExpiresAt.IsZero() || time.Now().Before(apiToken.ExpiresAt)) {
+					ctx = context.WithValue(ctx, UserIDKey, apiToken.UserID)
+					ctx = context.WithValue(ctx, IsAdminKey, false)
+					next.ServeHTTP(w, r.WithContext(ctx))
+					return
+				}
 			}
 		}
 
