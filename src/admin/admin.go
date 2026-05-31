@@ -973,8 +973,8 @@ func (a *Admin) handleServerBackup(w http.ResponseWriter, r *http.Request) {
             <td>%s</td>
             <td>%s</td>
             <td>%s</td>
-            <td><button onclick="alert('Restore not implemented')">Restore</button></td>
-        </tr>`, b["id"], b["type"], b["size"], b["created_at"])
+            <td><form method="POST" action="/server/admin/config/backup/restore" style="display:inline"><input type="hidden" name="id" value="%v"><button type="submit">Restore</button></form></td>
+        </tr>`, b["id"], b["type"], b["size"], b["created_at"], b["id"])
 	}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")

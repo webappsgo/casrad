@@ -830,11 +830,9 @@ func (h *APIHandler) CoverArt(w http.ResponseWriter, r *http.Request) {
 
 	_ = artType
 
-	// In production would return actual cover art
-	// For now, return a placeholder response
-	w.Header().Set("Content-Type", "image/png")
-	w.Header().Set("Cache-Control", "public, max-age=86400")
-	w.WriteHeader(http.StatusOK)
+	// Cover art retrieval requires a loaded media library.
+	// Return 404 until the library scanner populates cover art paths.
+	http.NotFound(w, r)
 }
 
 // History handles GET /api/v1/history - Get listening history

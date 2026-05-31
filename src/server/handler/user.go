@@ -269,7 +269,11 @@ func (h *UserHandler) Tokens(w http.ResponseWriter, r *http.Request) {
         <h1>API Tokens</h1>
         <div class="card">
             <p>No API tokens created.</p>
-            <button onclick="alert('Token creation UI coming soon')">Create Token</button>
+            <button onclick="document.getElementById('create-token-form').style.display='block'">Create Token</button>
+            <form id="create-token-form" style="display:none;margin-top:1rem;" method="POST" action="/api/v1/users/tokens">
+                <input type="text" name="name" placeholder="Token name" required style="display:block;width:100%;margin-bottom:0.5rem;padding:0.5rem;border:1px solid #6272a4;background:#44475a;color:#f8f8f2;border-radius:4px;">
+                <button type="submit">Generate</button>
+            </form>
         </div>
     </div>
 </body>

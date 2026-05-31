@@ -338,7 +338,7 @@ func (s *Server) handleAdminDashboard(w http.ResponseWriter, r *http.Request) {
         </div>
         <div class="card">
             <h2>Quick Actions</h2>
-            <p>Coming soon...</p>
+            <p><a href="/server/admin/config/settings">Settings</a> &nbsp;|&nbsp; <a href="/server/admin/config/backup">Backup</a></p>
         </div>
     </div>
 </body>

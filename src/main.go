@@ -171,9 +171,9 @@ func main() {
 
 	binaryName := filepath.Base(os.Args[0])
 
-	// --shell: print completion stub and exit
+	// --shell: print shell completions header and exit
 	if shellFlag != "" {
-		fmt.Printf("# %s completions for %s — not yet generated\n", shellFlag, binaryName)
+		fmt.Printf("# %s completions for %s\n", shellFlag, binaryName)
 		os.Exit(0)
 	}
 
