@@ -5,14 +5,16 @@ import (
 	"net/http"
 )
 
-// swaggerUIHTML is the Swagger UI HTML template
+// swaggerUIHTML is the Swagger UI HTML template.
+// All assets are served from /static/swagger/ (embedded at build time per AI.md PART 7).
+// No CDN links are used.
 const swaggerUIHTML = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CASRAD API Documentation</title>
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css">
+    <link rel="stylesheet" type="text/css" href="/static/swagger/swagger-ui.css">
     <style>
         html { box-sizing: border-box; overflow-y: scroll; }
         *, *:before, *:after { box-sizing: inherit; }
@@ -22,8 +24,8 @@ const swaggerUIHTML = `<!DOCTYPE html>
 </head>
 <body>
     <div id="swagger-ui"></div>
-    <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
-    <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-standalone-preset.js"></script>
+    <script src="/static/swagger/swagger-ui-bundle.js"></script>
+    <script src="/static/swagger/swagger-ui-standalone-preset.js"></script>
     <script>
         window.onload = function() {
             window.ui = SwaggerUIBundle({

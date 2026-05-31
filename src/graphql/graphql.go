@@ -487,7 +487,9 @@ func PlaygroundHandler(theme string) http.Handler {
 	})
 }
 
-// graphiqlHTML returns the GraphiQL playground HTML
+// graphiqlHTML returns the GraphiQL playground HTML.
+// All assets are served from /static/graphiql/ (embedded at build time per AI.md PART 7).
+// No CDN links are used.
 func graphiqlHTML(theme string) string {
 	themeCSS := ThemeCSS(theme)
 
@@ -497,7 +499,7 @@ func graphiqlHTML(theme string) string {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GraphQL Playground - CASRAD</title>
-    <link rel="stylesheet" href="https://unpkg.com/graphiql@3.0.6/graphiql.min.css" />
+    <link rel="stylesheet" href="/static/graphiql/graphiql.min.css" />
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { height: 100%; }
@@ -510,9 +512,9 @@ func graphiqlHTML(theme string) string {
 </head>
 <body>
     <div id="graphiql"></div>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/graphiql@3.0.6/graphiql.min.js"></script>
+    <script src="/static/graphiql/react.production.min.js"></script>
+    <script src="/static/graphiql/react-dom.production.min.js"></script>
+    <script src="/static/graphiql/graphiql.min.js"></script>
     <script>
         const fetcher = GraphiQL.createFetcher({ url: '/graphql' });
         ReactDOM.createRoot(document.getElementById('graphiql')).render(

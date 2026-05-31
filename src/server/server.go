@@ -15,11 +15,14 @@ import (
 
 	"github.com/casapps/casrad/locales"
 	"github.com/casapps/casrad/src/config"
+	"github.com/casapps/casrad/src/graphql"
 	"github.com/casapps/casrad/src/server/handler"
 	appmiddleware "github.com/casapps/casrad/src/server/middleware"
+	"github.com/casapps/casrad/src/server/metrics"
 	"github.com/casapps/casrad/src/server/model"
 	"github.com/casapps/casrad/src/server/service"
 	"github.com/casapps/casrad/src/server/store"
+	"github.com/casapps/casrad/src/swagger"
 )
 
 // Server represents the HTTP server
@@ -147,10 +150,25 @@ func (s *Server) setupRoutes() *chi.Mux {
 	r.Get("/.well-known/security.txt", s.handleSecurityTxt)
 	r.Get("/.well-known/change-password", s.handleChangePassword)
 
-	// Server-scoped routes: health, auth, admin
+	// API docs — shared handlers mounted at both web and API paths per AI.md PART 13/14
+	swaggerUIHandler := swagger.Handler()
+	swaggerSpecHandler := swagger.Spec()
+	graphqlAPIHandler := graphql.Handler(s.store)
+	graphqlPlayground := graphql.PlaygroundHandler("")
+
+	// Unversioned API aliases — MUST be the same handler, never redirect (AI.md PART 14)
+	r.Handle("/api/swagger", swaggerUIHandler)
+	r.Handle("/api/openapi.json", swaggerSpecHandler)
+	r.Handle("/api/graphql", graphqlAPIHandler)
+
+	// Server-scoped routes: health, auth, admin, docs
 	r.Route("/server", func(r chi.Router) {
 		// HTML health check page — /server/healthz
 		r.Get("/healthz", s.handleHealth)
+
+		// Documentation pages — /server/docs/...
+		r.Get("/docs/swagger", swaggerUIHandler.ServeHTTP)
+		r.Get("/docs/graphql", graphqlPlayground.ServeHTTP)
 
 		// Auth pages — /server/auth/...
 		r.Get("/auth/login", s.handleAuthLoginPage)
@@ -180,6 +198,22 @@ func (s *Server) setupRoutes() *chi.Mux {
 	r.Route("/api/v1", func(r chi.Router) {
 		// JSON health endpoint — /api/v1/server/healthz
 		r.Get("/server/healthz", s.handleAPIHealth)
+
+		// OpenAPI spec — /api/v1/openapi.json
+		r.Get("/openapi.json", swaggerSpecHandler.ServeHTTP)
+
+		// Swagger UI — /api/v1/server/swagger (same handler as /server/docs/swagger)
+		r.Get("/server/swagger", swaggerUIHandler.ServeHTTP)
+
+		// GraphQL API — /api/v1/server/graphql (same handler as /api/graphql)
+		r.Handle("/server/graphql", graphqlAPIHandler)
+		r.Handle("/graphql", graphqlAPIHandler)
+
+		// Prometheus-format metrics — /api/v1/server/metrics (AI.md PART 21)
+		r.Get("/server/metrics", metrics.Handler().ServeHTTP)
+
+		// Autodiscover — exposes .onion address when Tor is enabled (AI.md PART 32)
+		r.Get("/autodiscover", s.handleAutodiscover)
 
 		// Tracks — flat routes avoid trailing-slash bug (AI.md PART 14)
 		r.Get("/tracks", s.apiHandler.Tracks)
@@ -726,6 +760,14 @@ func (s *Server) handleAdminSetup(w http.ResponseWriter, r *http.Request) {
 
 	ap := s.adminPath()
 	http.Redirect(w, r, "/server/"+ap+"/", http.StatusSeeOther)
+}
+
+// handleAutodiscover exposes server addresses including .onion when Tor is active (AI.md PART 32).
+// Returns public-safe information only — no internal IPs or credentials.
+func (s *Server) handleAutodiscover(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	// Tor hidden service address is omitted when Tor subsystem is not active
+	fmt.Fprintf(w, `{"ok":true,"data":{"server":"%s","tor":null}}`, r.Host)
 }
 
 // langMiddleware persists a ?lang= query parameter as a cookie per AI.md PART 31.

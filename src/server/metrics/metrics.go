@@ -1,15 +1,15 @@
-// Package metrics provides Prometheus-compatible metrics
-// See AI.md PART 21 for metrics specification
+// Package metrics provides Prometheus-compatible metrics per AI.md PART 21.
+// Metrics are exported in Prometheus text format at /api/v1/server/metrics.
+// Uses pure-Go implementation — no prometheus/client_golang dependency needed.
 package metrics
 
 import (
+	"fmt"
+	"net/http"
 	"runtime"
 	"sync"
 	"time"
 )
-
-// Note: This is a stub implementation that doesn't require prometheus client_golang
-// Full implementation would use github.com/prometheus/client_golang/prometheus
 
 // MetricsConfig holds metrics configuration
 type MetricsConfig struct {
@@ -264,4 +264,84 @@ func RecordAuthAttempt(method string, success bool) {
 func UpdateUptime() {
 	uptime := time.Since(time.Unix(int64(AppStartTime.Value()), 0))
 	AppUptime.Set(uptime.Seconds())
+}
+
+// Handler returns an HTTP handler that serves Prometheus-format metrics.
+// Metrics are exposed at /api/v1/server/metrics per AI.md PART 21.
+func Handler() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		UpdateUptime()
+
+		var ms runtime.MemStats
+		runtime.ReadMemStats(&ms)
+
+		w.Header().Set("Content-Type", "text/plain; version=0.0.4; charset=utf-8")
+
+		metricsLock.RLock()
+		defer metricsLock.RUnlock()
+
+		// App info gauge
+		fmt.Fprintf(w, "# HELP casrad_app_info Application version info\n")
+		fmt.Fprintf(w, "# TYPE casrad_app_info gauge\n")
+		fmt.Fprintf(w, "casrad_app_info{version=%q,commit=%q,go_version=%q} 1\n",
+			appInfo.Version, appInfo.Commit, appInfo.GoVersion)
+
+		// Uptime
+		fmt.Fprintf(w, "# HELP casrad_uptime_seconds Seconds since application start\n")
+		fmt.Fprintf(w, "# TYPE casrad_uptime_seconds gauge\n")
+		fmt.Fprintf(w, "casrad_uptime_seconds %.2f\n", AppUptime.Value())
+
+		// HTTP requests
+		fmt.Fprintf(w, "# HELP casrad_http_requests_total Total HTTP requests by method/path/status\n")
+		fmt.Fprintf(w, "# TYPE casrad_http_requests_total counter\n")
+		for k, c := range HTTPRequestsTotal {
+			fmt.Fprintf(w, "casrad_http_requests_total{key=%q} %d\n", k, c.Value())
+		}
+
+		// DB queries
+		fmt.Fprintf(w, "# HELP casrad_db_queries_total Total database queries\n")
+		fmt.Fprintf(w, "# TYPE casrad_db_queries_total counter\n")
+		for k, c := range DBQueriesTotal {
+			fmt.Fprintf(w, "casrad_db_queries_total{key=%q} %d\n", k, c.Value())
+		}
+
+		// Cache hits/misses
+		fmt.Fprintf(w, "# HELP casrad_cache_hits_total Total cache hits\n")
+		fmt.Fprintf(w, "# TYPE casrad_cache_hits_total counter\n")
+		for k, c := range CacheHits {
+			fmt.Fprintf(w, "casrad_cache_hits_total{cache=%q} %d\n", k, c.Value())
+		}
+		fmt.Fprintf(w, "# HELP casrad_cache_misses_total Total cache misses\n")
+		fmt.Fprintf(w, "# TYPE casrad_cache_misses_total counter\n")
+		for k, c := range CacheMisses {
+			fmt.Fprintf(w, "casrad_cache_misses_total{cache=%q} %d\n", k, c.Value())
+		}
+
+		// Scheduler tasks
+		fmt.Fprintf(w, "# HELP casrad_scheduler_tasks_total Scheduler task executions\n")
+		fmt.Fprintf(w, "# TYPE casrad_scheduler_tasks_total counter\n")
+		for k, c := range SchedulerTasksTotal {
+			fmt.Fprintf(w, "casrad_scheduler_tasks_total{task=%q} %d\n", k, c.Value())
+		}
+
+		// Auth attempts
+		fmt.Fprintf(w, "# HELP casrad_auth_attempts_total Authentication attempts\n")
+		fmt.Fprintf(w, "# TYPE casrad_auth_attempts_total counter\n")
+		for k, c := range AuthAttemptsTotal {
+			fmt.Fprintf(w, "casrad_auth_attempts_total{method=%q} %d\n", k, c.Value())
+		}
+
+		// Go runtime metrics
+		fmt.Fprintf(w, "# HELP casrad_go_goroutines Number of goroutines\n")
+		fmt.Fprintf(w, "# TYPE casrad_go_goroutines gauge\n")
+		fmt.Fprintf(w, "casrad_go_goroutines %d\n", runtime.NumGoroutine())
+
+		fmt.Fprintf(w, "# HELP casrad_go_memory_alloc_bytes Allocated heap bytes\n")
+		fmt.Fprintf(w, "# TYPE casrad_go_memory_alloc_bytes gauge\n")
+		fmt.Fprintf(w, "casrad_go_memory_alloc_bytes %d\n", ms.Alloc)
+
+		fmt.Fprintf(w, "# HELP casrad_go_memory_sys_bytes Total memory obtained from OS\n")
+		fmt.Fprintf(w, "# TYPE casrad_go_memory_sys_bytes gauge\n")
+		fmt.Fprintf(w, "casrad_go_memory_sys_bytes %d\n", ms.Sys)
+	})
 }
