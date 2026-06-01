@@ -10,11 +10,13 @@ import (
 // truthy values accepted for boolean true (case-insensitive)
 var truthyValues = map[string]bool{
 	"1": true, "y": true, "t": true,
-	"yes": true, "true": true, "on": true, "ok": true,
+	"yes": true, "true": true, "on": true, "ok": true, "okay": true,
 	"enable": true, "enabled": true,
+	"active": true, "accept": true, "accepted": true,
+	"allow": true, "allowed": true,
 	"yep": true, "yup": true, "yeah": true,
 	"aye": true, "si": true, "oui": true, "da": true, "hai": true,
-	"affirmative": true, "accept": true, "allow": true, "grant": true,
+	"affirmative": true, "grant": true,
 	"sure": true, "totally": true,
 }
 
@@ -23,10 +25,13 @@ var falsyValues = map[string]bool{
 	"0": true, "n": true, "f": true,
 	"no": true, "false": true, "off": true,
 	"disable": true, "disabled": true,
+	"inactive": true,
+	"deny": true, "denied": true,
+	"reject": true, "rejected": true,
 	"nope": true, "nah": true, "nay": true,
 	"nein": true, "non": true, "niet": true, "iie": true, "lie": true,
-	"negative": true, "reject": true, "block": true, "revoke": true,
-	"deny": true, "never": true, "noway": true,
+	"negative": true, "block": true, "revoke": true,
+	"never": true, "noway": true,
 }
 
 // ParseBool parses a string into a boolean using truthy/falsy values.
