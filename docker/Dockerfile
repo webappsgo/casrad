@@ -2,17 +2,14 @@
 # Build Stage - Compile Go binary
 # See AI.md PART 27 for Docker specification
 # =============================================================================
-FROM golang:alpine AS builder
-
-# Install git and bash (git: required for go mod download; bash: for build scripts)
-RUN apk add --no-cache git bash
+FROM casjaysdev/go:latest AS builder
 
 ARG TARGETARCH
 ARG VERSION=dev
 ARG BUILD_DATE
 ARG COMMIT_ID
 
-WORKDIR /build
+WORKDIR /app
 
 # Copy go.mod first for layer caching
 COPY go.mod go.sum ./
@@ -22,7 +19,7 @@ RUN go mod download
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=${TARGETARCH} go build \
     -ldflags "-s -w -X 'main.Version=${VERSION}' -X 'main.CommitID=${COMMIT_ID}' -X 'main.BuildDate=${BUILD_DATE}'" \
-    -o /build/binary/casrad ./src
+    -o /app/binary/casrad ./src
 
 # =============================================================================
 # Runtime Stage - Minimal Alpine image
@@ -69,7 +66,7 @@ RUN apk add --no-cache \
 # Docker volume mounts auto-create mount points
 
 # Copy binary from builder stage (multi-stage build)
-COPY --from=builder /build/binary/casrad /usr/local/bin/casrad
+COPY --from=builder /app/binary/casrad /usr/local/bin/casrad
 
 # Copy BUILD-TIME overlay (entrypoint.sh) from docker/rootfs/ into image
 # Note: This is docker/rootfs/ (build context), NOT runtime ./rootfs/ volumes

@@ -23,9 +23,7 @@ LDFLAGS := -s -w \
 BINDIR := binaries
 RELDIR := releases
 
-# Go directories (persistent across builds)
-GODIR := $(HOME)/.local/share/go
-GOCACHE := $(HOME)/.local/share/go/build
+# Go state is kept in the named Docker volume go-state:/usr/local/share/go
 
 # Build targets - 8 platforms required
 PLATFORMS := linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64 windows/arm64 freebsd/amd64 freebsd/arm64
@@ -33,12 +31,12 @@ PLATFORMS := linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64 win
 # Docker - Set REGISTRY based on your platform (ghcr.io, registry.gitlab.com, git.example.com)
 REGISTRY ?= ghcr.io/$(PROJECTORG)/$(PROJECTNAME)
 GO_DOCKER := docker run --rm \
-	-v $(PWD):/build \
-	-v $(GOCACHE):/root/.cache/go-build \
-	-v $(GODIR):/go \
-	-w /build \
+	--name $(PROJECTNAME)-$$(tr -dc 'a-z0-9' </dev/urandom | head -c8) \
+	-v $(PWD):/app \
+	-v go-state:/usr/local/share/go \
+	-w /app \
 	-e CGO_ENABLED=0 \
-	golang:alpine
+	casjaysdev/go:latest
 
 .PHONY: build local release docker test dev
 
@@ -48,7 +46,6 @@ GO_DOCKER := docker run --rm \
 build: clean
 	@mkdir -p $(BINDIR)
 	@echo "Building version $(VERSION)..."
-	@mkdir -p $(GOCACHE) $(GODIR)
 
 	# Tidy and download modules
 	@echo "Tidying and downloading Go modules..."
@@ -80,7 +77,6 @@ build: clean
 local: clean
 	@mkdir -p $(BINDIR)
 	@echo "Building local binaries version $(VERSION)..."
-	@mkdir -p $(GOCACHE) $(GODIR)
 
 	# Tidy and download modules
 	@echo "Tidying and downloading Go modules..."
@@ -180,7 +176,6 @@ docker:
 # =============================================================================
 test:
 	@echo "Running tests with coverage..."
-	@mkdir -p $(GOCACHE) $(GODIR)
 	@$(GO_DOCKER) go mod download
 	@$(GO_DOCKER) go test -v -cover -coverprofile=coverage.out ./...
 	@COVERAGE=$$($(GO_DOCKER) go tool cover -func=coverage.out | grep total | awk '{print $$3}' | sed 's/%//'); \
@@ -197,7 +192,6 @@ test:
 # Fast: host platform only, no ldflags, random temp dir for isolation
 # Builds server + CLI + agent (if they exist)
 dev:
-	@mkdir -p $(GOCACHE) $(GODIR)
 	@$(GO_DOCKER) go mod tidy
 	@BUILD_DIR=$$(mktemp -d "$${TMPDIR:-/tmp}/$(PROJECTORG).XXXXXX") && \
 		echo "Quick dev build to $$BUILD_DIR..." && \

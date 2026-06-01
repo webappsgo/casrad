@@ -2,9 +2,9 @@
 # Toolchain Image - casrad build/test/lint/scan environment
 # Tagged: ghcr.io/casapps/casrad:build
 # Rebuilt monthly via build-toolchain.yml (workflow_dispatch or 1st of month)
-# NEVER pin the Go version — always use golang:alpine (rolling)
+# NEVER pin the Go version — always use casjaysdev/go:latest (rolling)
 # =============================================================================
-FROM golang:alpine
+FROM casjaysdev/go:latest
 
 # No LABEL blocks — all image metadata is applied as OCI annotations at build time.
 # Pass --annotation flags to docker buildx build (or use docker/metadata-action
@@ -40,4 +40,4 @@ RUN staticcheck -version && \
     gosec --version
 
 # Set working directory for CI job checkout
-WORKDIR /build
+WORKDIR /app
