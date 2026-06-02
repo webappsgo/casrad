@@ -177,14 +177,16 @@ func (h *AdminHandler) Preferences(w http.ResponseWriter, r *http.Request) {
 <body>
     <div class="container">
         <h1>Preferences</h1>
+        <form method="post" action="preferences">
         <div class="card">
             <label for="theme">Theme</label>
             <select id="theme" name="theme">
                 <option value="dark" selected>Dark (Dracula)</option>
                 <option value="light">Light</option>
             </select>
-            <button type="button" onclick="alert('Preferences saved')">Save</button>
+            <button type="submit">Save</button>
         </div>
+        </form>
     </div>
 </body>
 </html>`))
@@ -231,11 +233,13 @@ func (h *AdminHandler) ServerSettings(w http.ResponseWriter, r *http.Request) {
 <body>
     <div class="container">
         <h1>Server Settings</h1>
+        <form method="post" action="settings">
         <div class="card">
             <label for="name">Server Name</label>
-            <input type="text" id="name" value="CASRAD">
-            <button type="button" onclick="alert('Settings saved')">Save</button>
+            <input type="text" id="name" name="name" value="CASRAD">
+            <button type="submit">Save</button>
         </div>
+        </form>
     </div>
 </body>
 </html>`))
@@ -383,7 +387,7 @@ func (h *AdminHandler) ServerBackup(w http.ResponseWriter, r *http.Request) {
     <div class="container">
         <h1>Backup Management</h1>
         <div class="card">
-            <button type="button" onclick="alert('Creating backup...')">Create Backup</button>
+            <form method="post" action="backup"><button type="submit">Create Backup</button></form>
         </div>
     </div>
 </body>

@@ -485,14 +485,15 @@ func (a *Admin) handleServerSettings(w http.ResponseWriter, r *http.Request) {
         <h1>Server Settings</h1>
         <a href="/` + a.path + `/">&larr; Back to Dashboard</a>
 
-        <div class="card" style="margin-top: 1rem;">
+        <form method="post" action="/` + a.path + `/server/settings" style="margin-top: 1rem;">
+        <div class="card">
             <h2>General</h2>
             <label for="server_name">Server Name</label>
-            <input type="text" id="server_name" value="CASRAD">
+            <input type="text" id="server_name" name="server_name" value="CASRAD">
             <label for="server_url">Server URL</label>
-            <input type="text" id="server_url" placeholder="https://your-server.com">
+            <input type="text" id="server_url" name="server_url" placeholder="https://your-server.com">
             <label for="registration">User Registration</label>
-            <select id="registration">
+            <select id="registration" name="registration">
                 <option value="disabled" selected>Disabled</option>
                 <option value="public">Public</option>
                 <option value="approval">Require Approval</option>
@@ -501,17 +502,17 @@ func (a *Admin) handleServerSettings(w http.ResponseWriter, r *http.Request) {
 
         <div class="card">
             <h2>Protocols</h2>
-            <div class="toggle"><input type="checkbox" id="mpd" checked><label for="mpd">MPD (Port 6600)</label></div>
-            <div class="toggle"><input type="checkbox" id="subsonic" checked><label for="subsonic">Subsonic API</label></div>
-            <div class="toggle"><input type="checkbox" id="webdav" checked><label for="webdav">WebDAV</label></div>
-            <div class="toggle"><input type="checkbox" id="rtmp" checked><label for="rtmp">RTMP (Port 1935)</label></div>
-            <div class="toggle"><input type="checkbox" id="dlna" checked><label for="dlna">DLNA/UPnP</label></div>
+            <div class="toggle"><input type="checkbox" id="mpd" name="mpd" checked><label for="mpd">MPD (Port 6600)</label></div>
+            <div class="toggle"><input type="checkbox" id="subsonic" name="subsonic" checked><label for="subsonic">Subsonic API</label></div>
+            <div class="toggle"><input type="checkbox" id="webdav" name="webdav" checked><label for="webdav">WebDAV</label></div>
+            <div class="toggle"><input type="checkbox" id="rtmp" name="rtmp" checked><label for="rtmp">RTMP (Port 1935)</label></div>
+            <div class="toggle"><input type="checkbox" id="dlna" name="dlna" checked><label for="dlna">DLNA/UPnP</label></div>
         </div>
 
         <div class="card">
             <h2>Storage</h2>
             <label for="quota">Default User Quota</label>
-            <select id="quota">
+            <select id="quota" name="quota">
                 <option value="10">10 GB</option>
                 <option value="25">25 GB</option>
                 <option value="50" selected>50 GB</option>
@@ -520,7 +521,8 @@ func (a *Admin) handleServerSettings(w http.ResponseWriter, r *http.Request) {
             </select>
         </div>
 
-        <button type="button" onclick="alert('Settings saved')">Save Settings</button>
+        <button type="submit">Save Settings</button>
+        </form>
     </div>
 </body>
 </html>`))
@@ -636,7 +638,7 @@ func (a *Admin) handleServerUsers(w http.ResponseWriter, r *http.Request) {
     <div class="container">
         <div class="header">
             <h1>User Management</h1>
-            <button onclick="alert('Create user modal would open')">Create User</button>
+            <a href="/` + a.path + `/server/users/new" style="padding:0.5rem 1rem;background:#50fa7b;color:#282a36;border-radius:6px;text-decoration:none;">Create User</a>
         </div>
         <a href="/` + a.path + `/">&larr; Back to Dashboard</a>
         <div class="card" style="margin-top: 1rem;">
@@ -757,22 +759,28 @@ func (a *Admin) handleServerUserDetail(w http.ResponseWriter, r *http.Request) {
     <div class="container">
         <h1>Edit User: ` + user.Username + `</h1>
         <a href="/` + a.path + `/server/users">&larr; Back to Users</a>
+        <form method="post" action="/` + a.path + `/server/users/` + idStr + `">
+        <input type="hidden" name="_method" value="PATCH">
         <div class="card" style="margin-top: 1rem;">
             <label for="username">Username</label>
-            <input type="text" id="username" value="` + user.Username + `" readonly>
+            <input type="text" id="username" name="username" value="` + user.Username + `" readonly>
             <label for="email">Email</label>
-            <input type="email" id="email" value="` + user.Email + `">
+            <input type="email" id="email" name="email" value="` + user.Email + `">
             <label for="role">Role</label>
-            <select id="role">
+            <select id="role" name="role">
                 <option value="user"` + selectedIf(user.Role == "user") + `>User</option>
                 <option value="moderator"` + selectedIf(user.Role == "moderator") + `>Moderator</option>
                 <option value="admin"` + selectedIf(user.Role == "admin") + `>Admin</option>
             </select>
             <label for="quota">Storage Quota</label>
-            <input type="text" id="quota" value="` + formatBytes(uint64(user.StorageQuotaBytes)) + `">
-            <button type="button" onclick="alert('User updated')">Save Changes</button>
-            <button type="button" class="danger" onclick="if(confirm('Delete this user?')) alert('User deleted')">Delete User</button>
+            <input type="text" id="quota" name="quota" value="` + formatBytes(uint64(user.StorageQuotaBytes)) + `">
+            <button type="submit">Save Changes</button>
         </div>
+        </form>
+        <form method="post" action="/` + a.path + `/server/users/` + idStr + `" style="display:inline">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit" class="danger" onclick="return confirm('Delete this user? This cannot be undone.')">Delete User</button>
+        </form>
     </div>
 </body>
 </html>`))
@@ -1003,7 +1011,7 @@ func (a *Admin) handleServerBackup(w http.ResponseWriter, r *http.Request) {
     <div class="container">
         <div class="header">
             <h1>Backup Management</h1>
-            <button class="primary" onclick="alert('Creating backup...')">Create Backup</button>
+            <form method="post" action="/` + a.path + `/server/backup" style="display:inline"><button type="submit" class="primary">Create Backup</button></form>
         </div>
         <a href="/` + a.path + `/">&larr; Back to Dashboard</a>
         <div class="card" style="margin-top: 1rem;">
@@ -1193,7 +1201,7 @@ func (a *Admin) handleServerTasks(w http.ResponseWriter, r *http.Request) {
             <td><code>%s</code></td>
             <td>%s</td>
             <td><span class="badge badge-success">%s</span></td>
-            <td><button onclick="alert('Running task: %s')">Run Now</button></td>
+            <td><form method="post" action="/`+a.path+`/server/tasks/%s/run" style="display:inline"><button type="submit">Run Now</button></form></td>
         </tr>`, t["name"], t["schedule"], t["last_run"], t["status"], t["name"])
 	}
 
