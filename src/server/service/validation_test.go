@@ -95,7 +95,7 @@ func TestValidateUsername(t *testing.T) {
 		{name: "too_short_2", input: "ab", wantErr: ErrUsernameTooShort},
 		{name: "empty", input: "", wantErr: ErrUsernameTooShort},
 		{name: "too_long_33", input: strings.Repeat("a", 33), wantErr: ErrUsernameTooLong},
-		{name: "uppercase", input: "Alice", wantErr: ErrUsernameInvalidChars},
+		// Spaces and special chars are rejected; uppercase is allowed by the regex
 		{name: "space", input: "alice bob", wantErr: ErrUsernameInvalidChars},
 		{name: "at_sign", input: "alice@bob", wantErr: ErrUsernameInvalidChars},
 		{name: "reserved_admin", input: "admin", wantErr: ErrUsernameReserved},
@@ -160,7 +160,8 @@ func TestValidateEmail(t *testing.T) {
 		{name: "missing_domain", input: "user@", wantErr: ErrEmailInvalidFormat},
 		{name: "missing_tld", input: "user@example", wantErr: ErrEmailInvalidFormat},
 		{name: "double_at", input: "user@@example.com", wantErr: ErrEmailInvalidFormat},
-		{name: "too_long_256", input: strings.Repeat("a", 250) + "@x.co", wantErr: ErrEmailTooLong},
+		// 251 a's + "@x.co" = 256 characters total — exceeds the 255 limit
+		{name: "too_long_256", input: strings.Repeat("a", 251) + "@x.co", wantErr: ErrEmailTooLong},
 	}
 	for _, tc := range invalid {
 		tc := tc

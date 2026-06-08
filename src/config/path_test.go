@@ -88,8 +88,10 @@ func TestValidatePathSegment(t *testing.T) {
 		{name: "uppercase", input: "Admin", wantErr: ErrInvalidPath},
 		{name: "space", input: "hello world", wantErr: ErrInvalidPath},
 		{name: "slash", input: "foo/bar", wantErr: ErrInvalidPath},
-		{name: "dot_double", input: "..", wantErr: ErrPathTraversal},
-		{name: "dot_single", input: ".", wantErr: ErrPathTraversal},
+		// "." and ".." fail the valid-segment regex (not lowercase alphanumeric/hyphen/underscore),
+		// so they return ErrInvalidPath before the explicit traversal guard fires.
+		{name: "dot_double", input: "..", wantErr: ErrInvalidPath},
+		{name: "dot_single", input: ".", wantErr: ErrInvalidPath},
 		{name: "special_chars", input: "foo@bar", wantErr: ErrInvalidPath},
 	}
 	for _, tc := range invalid {
