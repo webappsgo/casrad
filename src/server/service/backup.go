@@ -546,11 +546,15 @@ func (s *BackupService) VerifyBackup(backupPath string, password string) error {
 		return fmt.Errorf("manifest not found in backup")
 	}
 
-	// Verify checksum
-	hash := sha256.Sum256(archiveData)
-	calculatedChecksum = "sha256:" + hex.EncodeToString(hash[:])
-	if manifest.Checksum != calculatedChecksum {
-		return ErrBackupCorrupted
+	// Verify checksum when the manifest carries one.
+	// Backups created before checksum-in-manifest was implemented have an empty
+	// Checksum field; skip the check for those to remain backward-compatible.
+	if manifest.Checksum != "" {
+		hash := sha256.Sum256(archiveData)
+		calculatedChecksum = "sha256:" + hex.EncodeToString(hash[:])
+		if manifest.Checksum != calculatedChecksum {
+			return ErrBackupCorrupted
+		}
 	}
 
 	// Test extract all files to temp dir
@@ -683,11 +687,9 @@ func (s *BackupService) RestoreBackup(backupPath string, password string) error 
 	return nil
 }
 
-// ListBackups returns list of available backups
-func (s *BackupService) ListBackups() ([]*BackupInfo, error) {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
-
+// listBackupsNoLock returns backups without acquiring any lock.
+// Callers must hold s.mu before calling this method.
+func (s *BackupService) listBackupsNoLock() ([]*BackupInfo, error) {
 	var backups []*BackupInfo
 
 	entries, err := os.ReadDir(s.config.Dir)
@@ -741,13 +743,21 @@ func (s *BackupService) ListBackups() ([]*BackupInfo, error) {
 	return backups, nil
 }
 
+// ListBackups returns list of available backups
+func (s *BackupService) ListBackups() ([]*BackupInfo, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	return s.listBackupsNoLock()
+}
+
 // ApplyRetention applies retention policy per PART 22
 // Only call after successful backup creation and verification
 func (s *BackupService) ApplyRetention() error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	backups, err := s.ListBackups()
+	// Use the no-lock variant to avoid deadlock — Lock() is already held above.
+	backups, err := s.listBackupsNoLock()
 	if err != nil {
 		return err
 	}

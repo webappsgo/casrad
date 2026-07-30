@@ -227,7 +227,7 @@ func (a *Admin) handleProfile(w http.ResponseWriter, r *http.Request) {
 
 	adminID := middleware.GetAdminID(ctx)
 	admin, err := a.store.GetAdminByID(ctx, adminID)
-	if err != nil {
+	if err != nil || admin == nil {
 		http.Error(w, "Admin not found", http.StatusNotFound)
 		return
 	}
@@ -291,7 +291,7 @@ func (a *Admin) handleProfileUpdate(w http.ResponseWriter, r *http.Request) {
 
 	adminID := middleware.GetAdminID(ctx)
 	admin, err := a.store.GetAdminByID(ctx, adminID)
-	if err != nil {
+	if err != nil || admin == nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(map[string]string{"error": "admin not found"})
@@ -724,7 +724,7 @@ func (a *Admin) handleServerUserDetail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user, err := a.store.GetUserByID(ctx, id)
-	if err != nil {
+	if err != nil || user == nil {
 		http.Error(w, "User not found", http.StatusNotFound)
 		return
 	}
@@ -806,7 +806,7 @@ func (a *Admin) handleServerUserUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user, err := a.store.GetUserByID(ctx, id)
-	if err != nil {
+	if err != nil || user == nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(map[string]string{"error": "user not found"})

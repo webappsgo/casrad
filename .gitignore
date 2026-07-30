@@ -115,6 +115,10 @@ volumes/
 go.work
 go.work.sum
 
+# Go test coverage (generated build artifacts)
+coverage.out
+coverage.html
+
 # IDE
 .idea/
 .vscode/

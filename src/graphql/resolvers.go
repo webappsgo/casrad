@@ -41,6 +41,9 @@ func (r *Resolver) Me(ctx context.Context) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
+	if user == nil {
+		return nil, nil
+	}
 
 	return map[string]interface{}{
 		"id":                 strconv.FormatInt(user.ID, 10),
@@ -157,11 +160,11 @@ func (r *Resolver) Login(ctx context.Context, identifier, password string) (map[
 		return nil, errors.New("identifier and password required")
 	}
 
-	// Lookup user by username or email
+	// Lookup user by username first, then email — vague error prevents enumeration
 	user, err := r.store.GetUserByUsername(ctx, identifier)
-	if err != nil {
+	if err != nil || user == nil {
 		user, err = r.store.GetUserByEmail(ctx, identifier)
-		if err != nil {
+		if err != nil || user == nil {
 			return nil, errors.New("invalid credentials")
 		}
 	}
@@ -288,6 +291,9 @@ func (r *Resolver) UpdateProfile(ctx context.Context, input map[string]interface
 	user, err := r.store.GetUserByID(ctx, userID)
 	if err != nil {
 		return nil, err
+	}
+	if user == nil {
+		return nil, errors.New("user not found")
 	}
 
 	// Update user

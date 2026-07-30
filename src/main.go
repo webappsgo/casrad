@@ -17,11 +17,11 @@ import (
 	"github.com/casapps/casrad/src/service"
 )
 
-// Version information - set by ldflags during build
+// Version information - set by ldflags during build per AI.md PART 26
 var (
-	Version      = "dev"
-	CommitID     = "unknown"
-	BuildDate    = "unknown"
+	Version      = "devel"
+	CommitID     = "N/A"
+	BuildDate    = "N/A"
 	OfficialSite = ""
 )
 
